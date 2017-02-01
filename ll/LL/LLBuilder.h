@@ -35,14 +35,32 @@ struct Table
 {
 	enum Type
 	{
-// 		LEFT,
-// 		RIGHT
+		LEFT,
+		RIGHT
 	};
+
+	void foo()
+	{
+		const std::vector<size_t> vec = { 1,2 };
+		vec.begin();
+	}
+
+	static size_t getRuleIndex(GrammarRule & rule, const std::vector<GrammarRule> & grammar)
+	{
+		for (std::vector<GrammarRule>::const_iterator it = grammar.cbegin(); it != grammar.cend(); ++it)
+		{
+			if (&*it == &rule)
+			{
+				return it - grammar.begin();
+			}
+		}
+		return 0;
+	}
 
 	static std::vector<GrammarRule> GetAllRulesWith(const GrammarSymbol & symbol, const Grammar & grammar)
 	{
 		std::vector<GrammarRule> result;
-		
+
 		for (auto & rule : grammar)
 		{
 			if (rule.left == symbol)
@@ -61,50 +79,108 @@ struct Table
 			//if(ta)
 		}
 	}
-	
-	//TODO: реализовать функцию возвращающую направл€ющее множество дл€ нетерминала
-	static std::vector<GrammarSymbol> GetFirstTerminalsFromRule(const GrammarRule & rule , const Grammar & grammar)
+
+	//TODO: реализовать функцию возвращающую (направл€ющее множество дл€ нетерминала) <- »Ќƒ≈ —џ Ё“»’ ѕ–ј¬»Ћ
+	//вопрос: если в resultIndexes будут добавл€тьс€ одинаковые правила? повли€ет ли это на работу программы? если да то надо скорее всего удал€ть повторы(?)
+	static std::vector<size_t> GetFirstTerminalsFromRule(size_t indexRule, const Grammar & grammar)
 	{
+
 		std::vector<GrammarSymbol> result;
 		std::vector<GrammarRule> rules;
-		if (rule.right[0].type == NONTERMINAL)
-		{
 
-			//.push_back(GetAllRulesWith(symbol, grammar));
-		}
-		else
+		std::vector<size_t> resultIndexes;
+
+		//изначальный поиск правил с нужным символом(right[0])
+		for (size_t i = 0; i < grammar.size(); ++i)
 		{
+			if (i != indexRule)
+			{
+				if (grammar[i].left == grammar[indexRule].right[0])
+				{
+					resultIndexes.push_back(i);
+				}
+			}
+		}
+
+		bool allTermsBeginWithTerm = false;
+		while (!allTermsBeginWithTerm)
+		{
+			allTermsBeginWithTerm = true;
+			for (size_t i = 0; i < resultIndexes.size(); ++i)
+			{
+				if (grammar[resultIndexes[i]].right[0].type == NONTERMINAL) //BEGINS WITH NONTERM
+				{
+					if (allTermsBeginWithTerm)
+					{
+						allTermsBeginWithTerm = false;
+
+						resultIndexes.erase(resultIndexes.begin() + i);
+						std::vector<GrammarRule> additionalRules = GetAllRulesWith(grammar[resultIndexes[i]].right[0], grammar);
+						for (auto el : additionalRules)
+						{
+							resultIndexes.push_back(getRuleIndex(el, grammar));
+						}
+						break;
+					}
+				}
+				else //BEGINS WITH TERM
+				{
+					//?do nothing?
+				}
+
+			}
 
 		}
+		return resultIndexes;
 	}
 
 
 	Table() {};
 
+	Table(const std::vector<TableNode> & left, const std::vector<std::vector<TableNode>> & right):
+		left(left), right(right)
+	{
+		
+	}
+
+	void bar(Table && table)
+	{
+		Table newTab = table;
+	}
+
+
+
 	Table(const Grammar & grammar, const GrammarRule & rule, size_t index, Type type = LEFT)
 	{
 
-		
+		int a = 3;
+
 		//std::vector<TableNode> bot;
 		std::vector<GrammarRule> rulesWithNonTerm = GetAllRulesWith(rule.left, grammar); //нашли правила с нетерминалом (пример - аксиома)
 
 		//добавл€ем в левую часть каждый нетерминал найденного правила + направл€ющее множество
 		for (auto el : rulesWithNonTerm)
 		{
+			//TODO
+			/*
 			left.push_back(TableNode(
 				GetFirstTerminalsFromSymbol(el.right[0], grammar),
 				//i1,
 				//i2,
 				el.left));
+				*/
 		}
 
-		//дл€ каждого элемента левой части (если несколько альтернатив правил) строим правую часть (цепочка нод с индексами дл€ правой части правила)
+		//дл€ каждого элемента левой части (тк может быть несколько альтернатив правил) строим правую часть (цепочка нод с индексами дл€ правой части правила)
 		for (size_t i = 0; i < rulesWithNonTerm.size(); ++i)
 		{
-			right.push_back(std::vector<TableNode>());
+			right[i].push_back(std::vector<TableNode>());
 			//fillRightPart (можно вынести в функцию!!)
 			for (auto el2 : rulesWithNonTerm[i].right)
 			{
+
+				//TODO
+/*
 				if (el2.type == TERMINAL)
 				{
 					right[i].push_back(TableNode(
@@ -122,9 +198,12 @@ struct Table
 						el2));
 				}
 			}
+			*/
+
+			}
+
 		}
 	}
-	
 	std::vector<TableNode> left;
 	std::vector<std::vector<TableNode>> right;
 };

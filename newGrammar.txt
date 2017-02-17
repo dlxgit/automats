@@ -1,5 +1,17 @@
-//для терминалов (переменных из лексера) убрать <>
-//сделать чтобы из <VAR> можно было считывать ничего (пропустить блок)
+п»ї//РґР»СЏ С‚РµСЂРјРёРЅР°Р»РѕРІ (РїРµСЂРµРјРµРЅРЅС‹С… РёР· Р»РµРєСЃРµСЂР°) СѓР±СЂР°С‚СЊ <>
+//СЃРґРµР»Р°С‚СЊ С‡С‚РѕР±С‹ РёР· <VAR> РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃС‡РёС‚С‹РІР°С‚СЊ РЅРёС‡РµРіРѕ (РїСЂРѕРїСѓСЃС‚РёС‚СЊ Р±Р»РѕРє)
+//РІРЅРёРјР°РЅРёРµ: С‚РµСЂРјРёРЅР°Р»С‹ РѕС‚РґРµР»СЊРЅРѕ
+//TODO: Р·Р°РјРµРЅРёС‚СЊ Р»РµРІСѓСЋ СЂРµРєСѓСЂСЃРёСЋ (arithmetic_expression + bool_expression)
+/*
+//Р±С‹Р»Рѕ        
+<arithmetic_expression> -> arithmetic_expression '+' term
+
+//СЃС‚Р°Р»Рѕ
+<B> -> '+' term <B>
+<B> -> E
+<arithmetic_expression> -> B 
+*/
+
 
 <PROGRAM> -> program <ID>
 
@@ -12,13 +24,9 @@
 
 <VARIABLE_TYPE> -> bool | int | bool [ <NUMBER> ] | int [ <NUMBER> ]
 
-//TERMINAL! <NUMBER> -> [0..9]..[0..9]
-//TERMINAL! <ID> [a..z].......
+<FULL_PROGRAM> -> <PROGRAM> <SCOPE> .  //СВ вЂ”В»СњС›С
 
-
-<FULL_PROGRAM> -> <PROGRAM> <SCOPE> .  //АКСИОМА
-
-<SCOPE> -> { <VAR> <STATEMENT_LIST> | <STATEMENT_LIST> }  //если сделаю var, то оставить просто <STATEMENT_LIST>
+<SCOPE> -> { <VAR> <STATEMENT_LIST> | <STATEMENT_LIST> }  //РµСЃР»Рё СЃРґРµР»Р°СЋ var, С‚Рѕ РѕСЃС‚Р°РІРёС‚СЊ РїСЂРѕСЃС‚Рѕ <STATEMENT_LIST>
 
 <STATEMENT_LIST> -> <STATEMENT> | <STATEMENT_LIST>
 
@@ -37,7 +45,7 @@
 <PAREN_EXPR> -> ( <EXPR> )  
 <EXPR> -> <arithmetic_expression> | <bool_expression>
 
-//приоритет операций +-/* (сначала унарный минус и скобки, */, +-)
+//РїСЂРёРѕСЂРёС‚РµС‚ РѕРїРµСЂР°С†РёР№ +-/* (СЃРЅР°С‡Р°Р»Р° СѓРЅР°СЂРЅС‹Р№ РјРёРЅСѓСЃ Рё СЃРєРѕР±РєРё, */, +-)
 term : variable | array_element | paren_expression | value
 
 <arithmetic_expression> -> '+' term | '-' term | term
@@ -53,6 +61,11 @@ term : variable | array_element | paren_expression | value
 				| <bool_expression> EQUALS term | <bool_expression> NOTEQUALS term
 				| <bool_expression> AND term | <bool_expression> OR term
 				| '!' <bool_expression>
+
+                
+                
+                
+
 
 			
 program test

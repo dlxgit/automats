@@ -1,0 +1,67 @@
+//дл€ терминалов (переменных из лексера) убрать <>
+//сделать чтобы из <VAR> можно было считывать ничего (пропустить блок)
+
+<PROGRAM> -> program <ID>
+
+ 
+<VAR> -> var { <VAR_LIST> }
+
+<VAR_LIST> -> <VARIABLE_DEFINE> | <VAR_LIST>
+
+<VARIABLE_DEFINE> -> <VARIABLE_TYPE> <ID>;
+
+<VARIABLE_TYPE> -> bool | int | bool [ <NUMBER> ] | int [ <NUMBER> ]
+
+//TERMINAL! <NUMBER> -> [0..9]..[0..9]
+//TERMINAL! <ID> [a..z].......
+
+
+<FULL_PROGRAM> -> <PROGRAM> <SCOPE> .  //ј —»ќћј
+
+<SCOPE> -> { <VAR> <STATEMENT_LIST> | <STATEMENT_LIST> }  //если сделаю var, то оставить просто <STATEMENT_LIST>
+
+<STATEMENT_LIST> -> <STATEMENT> | <STATEMENT_LIST>
+
+<STATEMENT> ->  <INPUT>
+			  | <OUTPUT>
+			  | <IF>
+			  | <WHILE>
+			  | <PAREN_EXPR>
+			  | <EXPR>
+
+		  
+<INPUT> -> read ( <ID> ) ;
+<OUTPUT> -> print <PAREN_EXPR> | print <ID> ;
+<IF> -> if <PAREN_EXPR> SCOPE
+<WHILE> -> while <PAREN_EXPR> SCOPE
+<PAREN_EXPR> -> ( <EXPR> )  
+<EXPR> -> <arithmetic_expression> | <bool_expression>
+
+//приоритет операций +-/* (сначала унарный минус и скобки, */, +-)
+term : variable | array_element | paren_expression | value
+
+<arithmetic_expression> -> '+' term | '-' term | term
+					  | arithmetic_expression '+' term
+					  | arithmetic_expression '-' term
+					  | arithmetic_expression '*' term
+					  | arithmetic_expression '/' term
+					  | arithmetic_expression '%' term
+
+<bool_expression> -> term
+				| <bool_expression> '<' term | <bool_expression> LESSOREQUALS term
+				| <bool_expression> '>' term | <bool_expression> MOREOREQUALS term
+				| <bool_expression> EQUALS term | <bool_expression> NOTEQUALS term
+				| <bool_expression> AND term | <bool_expression> OR term
+				| '!' <bool_expression>
+
+			
+program test
+{
+	var
+	{
+		int a;
+		bool isEmpty;
+	}
+	
+	statements...
+}.

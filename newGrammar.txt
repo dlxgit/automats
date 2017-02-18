@@ -10,10 +10,10 @@
 
 //var list
 <VAR_LIST> -> <VARIABLE_DEFINE>
-<VAR_LIST> ->  <VAR_LIST>
+<VAR_LIST> -> <VARIABLE_DEFINE> <VAR_LIST>
 
 //var define
-<VARIABLE_DEFINE> -> <VARIABLE_TYPE> <ID>;
+<VARIABLE_DEFINE> -> <VARIABLE_TYPE> <ID> ;
 
 //var type
 <VARIABLE_TYPE> -> bool
@@ -41,18 +41,19 @@
 <INPUT> -> read ( <ID> ) ;
 
 //output
+//TODO: print id? может положить id внутрь чего-то?
 <OUTPUT> -> print <PAREN_EXPR> ;
 <OUTPUT> -> print <ID> ;
 
 //if
 <IF> -> if <PAREN_EXPR> SCOPE
+<IF> -> if <PAREN_EXPR> SCOPE else SCOPE
 
 //while
 <WHILE> -> while <PAREN_EXPR> SCOPE
 
 //paren expr
 <PAREN_EXPR> -> ( <EXPR> )
-<PAREN_EXPR> -> ( <PAREN_EXPR> )
 
 //expr
 <EXPR> -> <arithmetic_expression>
@@ -60,41 +61,52 @@
 
 //приоритет операций +-/* (сначала унарный минус и скобки, */, +-)
 //term
-term -> variable
-term -> array_element
-term -> paren_expression
-term -> value
+<term> -> <variable>
+<term> -> <array_element>
+<term> -> <paren_expression>
+<term> -> <expression>
+<term> -> <value>
+
 
 //arithmetic expression
-<arithmetic_expression> -> '+' term 
-<arithmetic_expression> -> '-' term
-<arithmetic_expression> -> term
+<arithmetic_symbol> -> +
+<arithmetic_symbol> -> -
+<arithmetic_symbol> -> *
+<arithmetic_symbol> -> /
+<arithmetic_symbol> -> %
+
+
+<arithmetic_beginning> -> +
+<arithmetic_beginning> -> -
+<arithmetic_beginning> -> E
+
+<arithmetic_expression> -> <arithmetic_beginning> <term>
 <arithmetic_expression> -> <arithmetic_expression_increase>
 
 //arithmetic expr inc
-<arithmetic_expression_increase> -> '+' term <arithmetic_expression> 
-<arithmetic_expression_increase> -> '-' term <arithmetic_expression> 
-<arithmetic_expression_increase> -> '*' term <arithmetic_expression> 
-<arithmetic_expression_increase> -> '/' term <arithmetic_expression> 
-<arithmetic_expression_increase> -> '%' term <arithmetic_expression>
+
+<arithmetic_expression_increase> -> <arithmetic_beginning> <term> <arithmetic_expression>
 <arithmetic_expression_increase> -> E;
 
 //bool expression
-<bool_expression> -> term
+<bool_expression> -> <term>
 <bool_expression> -> <bool_expression_increase>
-<bool_expression> -> '!' <bool_expression>
+<bool_expression> -> ! <bool_expression>
 
 //bool expr inc
-<bool_expression_increase> -> '<' term <bool_expression>
-<bool_expression_increase> -> LESSOREQUALS term <bool_expression>
-<bool_expression_increase> -> '>' term <bool_expression>
-<bool_expression_increase> -> MOREOREQUALS term <bool_expression>
-<bool_expression_increase> -> EQUALS term <bool_expression>
-<bool_expression_increase> -> NOTEQUALS term <bool_expression>
-<bool_expression_increase> -> AND term <bool_expression>
-<bool_expression_increase> -> OR term <bool_expression>
+<bool_symbol> -> <
+<bool_symbol> -> >
+<bool_symbol> -> <=
+<bool_symbol> -> >=
+<bool_symbol> -> ==
+<bool_symbol> -> !=
+<bool_symbol> -> &&
+<bool_symbol> -> ||
+
+<bool_expression_increase> -> <bool_symbol> <term> <bool_expression>
 <bool_expression_increase> -> E;
 			
+            
 program test
 {
 	var

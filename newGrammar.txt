@@ -1,72 +1,99 @@
 ﻿//для терминалов (переменных из лексера) убрать <>
 //сделать чтобы из <VAR> можно было считывать ничего (пропустить блок)
-//внимание: терминалы отдельно
-//TODO: заменить левую рекурсию (arithmetic_expression + bool_expression)
-/*
-//было        
-<arithmetic_expression> -> arithmetic_expression '+' term
-
-//стало
-<B> -> '+' term <B>
-<B> -> E
-<arithmetic_expression> -> B 
-*/
 
 
-<PROGRAM> -> program <ID>
+//program
+<FULL_PROGRAM> -> program id <SCOPE> .
 
- 
+ //var
 <VAR> -> var { <VAR_LIST> }
 
-<VAR_LIST> -> <VARIABLE_DEFINE> | <VAR_LIST>
+//var list
+<VAR_LIST> -> <VARIABLE_DEFINE>
+<VAR_LIST> ->  <VAR_LIST>
 
+//var define
 <VARIABLE_DEFINE> -> <VARIABLE_TYPE> <ID>;
 
-<VARIABLE_TYPE> -> bool | int | bool [ <NUMBER> ] | int [ <NUMBER> ]
+//var type
+<VARIABLE_TYPE> -> bool
+<VARIABLE_TYPE> -> int
+<VARIABLE_TYPE> -> bool [ number ]
+<VARIABLE_TYPE> -> int [ number ]
 
-<FULL_PROGRAM> -> <PROGRAM> <SCOPE> .  //ј —»ќћј
+//scope
+<SCOPE> -> { <VAR> <STATEMENT_LIST> }  //если сделаю var, то оставить просто <STATEMENT_LIST>
+<SCOPE> -> { <STATEMENT_LIST> }
 
-<SCOPE> -> { <VAR> <STATEMENT_LIST> | <STATEMENT_LIST> }  //если сделаю var, то оставить просто <STATEMENT_LIST>
+//st list
+<STATEMENT_LIST> -> <STATEMENT>
+<STATEMENT_LIST> ->  <STATEMENT_LIST>
 
-<STATEMENT_LIST> -> <STATEMENT> | <STATEMENT_LIST>
-
-<STATEMENT> ->  <INPUT>
-			  | <OUTPUT>
-			  | <IF>
-			  | <WHILE>
-			  | <PAREN_EXPR>
-			  | <EXPR>
-
-		  
+//statement
+<STATEMENT> -> <INPUT>
+<STATEMENT> -> <OUTPUT>
+<STATEMENT> -> <IF>
+<STATEMENT> -> <WHILE>
+<STATEMENT> -> <PAREN_EXPR>
+<STATEMENT> -> <EXPR>
+			  
+//input			  
 <INPUT> -> read ( <ID> ) ;
-<OUTPUT> -> print <PAREN_EXPR> | print <ID> ;
+
+//output
+<OUTPUT> -> print <PAREN_EXPR> ;
+<OUTPUT> -> print <ID> ;
+
+//if
 <IF> -> if <PAREN_EXPR> SCOPE
+
+//while
 <WHILE> -> while <PAREN_EXPR> SCOPE
-<PAREN_EXPR> -> ( <EXPR> )  
-<EXPR> -> <arithmetic_expression> | <bool_expression>
+
+//paren expr
+<PAREN_EXPR> -> ( <EXPR> )
+<PAREN_EXPR> -> ( <PAREN_EXPR> )
+
+//expr
+<EXPR> -> <arithmetic_expression>
+<EXPR> -> <bool_expression>
 
 //приоритет операций +-/* (сначала унарный минус и скобки, */, +-)
-term : variable | array_element | paren_expression | value
+//term
+term -> variable
+term -> array_element
+term -> paren_expression
+term -> value
 
-<arithmetic_expression> -> '+' term | '-' term | term
-					  | arithmetic_expression '+' term
-					  | arithmetic_expression '-' term
-					  | arithmetic_expression '*' term
-					  | arithmetic_expression '/' term
-					  | arithmetic_expression '%' term
+//arithmetic expression
+<arithmetic_expression> -> '+' term 
+<arithmetic_expression> -> '-' term
+<arithmetic_expression> -> term
+<arithmetic_expression> -> <arithmetic_expression_increase>
 
+//arithmetic expr inc
+<arithmetic_expression_increase> -> '+' term <arithmetic_expression> 
+<arithmetic_expression_increase> -> '-' term <arithmetic_expression> 
+<arithmetic_expression_increase> -> '*' term <arithmetic_expression> 
+<arithmetic_expression_increase> -> '/' term <arithmetic_expression> 
+<arithmetic_expression_increase> -> '%' term <arithmetic_expression>
+<arithmetic_expression_increase> -> E;
+
+//bool expression
 <bool_expression> -> term
-				| <bool_expression> '<' term | <bool_expression> LESSOREQUALS term
-				| <bool_expression> '>' term | <bool_expression> MOREOREQUALS term
-				| <bool_expression> EQUALS term | <bool_expression> NOTEQUALS term
-				| <bool_expression> AND term | <bool_expression> OR term
-				| '!' <bool_expression>
+<bool_expression> -> <bool_expression_increase>
+<bool_expression> -> '!' <bool_expression>
 
-                
-                
-                
-
-
+//bool expr inc
+<bool_expression_increase> -> '<' term <bool_expression>
+<bool_expression_increase> -> LESSOREQUALS term <bool_expression>
+<bool_expression_increase> -> '>' term <bool_expression>
+<bool_expression_increase> -> MOREOREQUALS term <bool_expression>
+<bool_expression_increase> -> EQUALS term <bool_expression>
+<bool_expression_increase> -> NOTEQUALS term <bool_expression>
+<bool_expression_increase> -> AND term <bool_expression>
+<bool_expression_increase> -> OR term <bool_expression>
+<bool_expression_increase> -> E;
 			
 program test
 {

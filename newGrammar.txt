@@ -22,12 +22,12 @@
 <VARIABLE_TYPE> -> int [ number ]
 
 //scope
-<SCOPE> -> { <VAR> <STATEMENT_LIST> }  //если сделаю var, то оставить просто <STATEMENT_LIST>
 <SCOPE> -> { <STATEMENT_LIST> }
 
 //st list
 <STATEMENT_LIST> -> <STATEMENT>
-<STATEMENT_LIST> ->  <STATEMENT_LIST>
+<STATEMENT_LIST> ->  <STATEMENT> <STATEMENT_LIST>
+<STATEMENT_LIST> ->  E
 
 //statement
 <STATEMENT> -> <INPUT>

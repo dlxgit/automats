@@ -7,27 +7,26 @@
 
  //var
 <VAR> -> var { <VAR_LIST> }
+<VAR> -> E
 
 //var list
-<VAR_LIST> -> <VARIABLE_DEFINE>
 <VAR_LIST> -> <VARIABLE_DEFINE> <VAR_LIST>
+<VAR_LIST> -> E
 
 //var define
-<VARIABLE_DEFINE> -> <VARIABLE_TYPE> <ID> ;
+<VARIABLE_DEFINE> -> typename <var_array_define_optional> ID ;
 
 //var type
-<VARIABLE_TYPE> -> bool
-<VARIABLE_TYPE> -> int
-<VARIABLE_TYPE> -> bool [ number ]
-<VARIABLE_TYPE> -> int [ number ]
+<var_array_define_optional> -> [ number ]
+<var_array_define_optional> -> E
 
 //scope
-<SCOPE> -> { <STATEMENT_LIST> }
+<SCOPE> -> { <VAR> <STATEMENT_LIST> }
 
 //st list
 <STATEMENT_LIST> -> <STATEMENT>
-<STATEMENT_LIST> ->  <STATEMENT> <STATEMENT_LIST>
-<STATEMENT_LIST> ->  E
+<STATEMENT_LIST> -> <STATEMENT> <STATEMENT_LIST>
+<STATEMENT_LIST> -> E
 
 //statement
 <STATEMENT> -> <INPUT>
@@ -36,7 +35,12 @@
 <STATEMENT> -> <WHILE>
 <STATEMENT> -> <PAREN_EXPR>
 <STATEMENT> -> <EXPR>
-			  
+<STATEMENT> -> <variable> = value ;
+<STATEMENT> -> <variable> = { valueList } ;
+
+<valueList> -> term , <valueList>
+<valueList> -> E
+
 //input			  
 <INPUT> -> read ( <ID> ) ;
 
@@ -46,11 +50,12 @@
 <OUTPUT> -> print <ID> ;
 
 //if
-<IF> -> if <PAREN_EXPR> SCOPE
-<IF> -> if <PAREN_EXPR> SCOPE else SCOPE
+<IF> -> if <PAREN_EXPR> <SCOPE> <IF_ENDING>
+<IF_ENDING> -> E
+<IF_ENDING> -> else <SCOPE>
 
 //while
-<WHILE> -> while <PAREN_EXPR> SCOPE
+<WHILE> -> while <PAREN_EXPR> <SCOPE>
 
 //paren expr
 <PAREN_EXPR> -> ( <EXPR> )
@@ -62,10 +67,12 @@
 //приоритет операций +-/* (сначала унарный минус и скобки, */, +-)
 //term
 <term> -> <variable>
-<term> -> <array_element>
 <term> -> <paren_expression>
 <term> -> <expression>
-<term> -> <value>
+<term> -> value
+
+<variable> -> id
+<variable> -> id [ number ]
 
 
 //arithmetic expression

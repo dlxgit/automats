@@ -13,9 +13,9 @@
 
 */
 
-struct TableNode
+struct OldTableNode
 {
-	TableNode(GrammarSymbol term, size_t i1, size_t i2, GrammarSymbol nonTerm = GrammarSymbol(TERMINAL, "\n"))
+	OldTableNode(GrammarSymbol term, size_t i1, size_t i2, GrammarSymbol nonTerm = GrammarSymbol(TERMINAL, "\n"))
 	{
 		//забыл зачем nonTerm = GrammarSymbol(TERMINAL, "\n"))  //вспомнил (дл€ правых правил) - иногда просто терминал справа.
 		this->term = term;
@@ -31,19 +31,13 @@ struct TableNode
 	size_t rule_id;
 };
 
-struct Table
+struct OldTable
 {
 	enum Type
 	{
 		LEFT,
 		RIGHT
 	};
-
-	void foo()
-	{
-		const std::vector<size_t> vec = { 1,2 };
-		vec.begin();
-	}
 
 	static size_t getRuleIndex(GrammarRule & rule, const std::vector<GrammarRule> & grammar)
 	{
@@ -72,7 +66,7 @@ struct Table
 		return result;
 	}
 
-	static size_t GetIndexOfTable(const std::vector<Table> & tables, const GrammarSymbol & symb)
+	static size_t GetIndexOfTable(const std::vector<OldTable> & tables, const GrammarSymbol & symb)
 	{
 		for (size_t i = 0; i < tables.size(); ++i)
 		{
@@ -80,11 +74,11 @@ struct Table
 		}
 	}
 
+
 	//TODO: реализовать функцию возвращающую (направл€ющее множество дл€ нетерминала) <- »Ќƒ≈ —џ Ё“»’ ѕ–ј¬»Ћ
 	//вопрос: если в resultIndexes будут добавл€тьс€ одинаковые правила? повли€ет ли это на работу программы? если да то надо скорее всего удал€ть повторы(?)
 	static std::vector<size_t> GetFirstTerminalsFromRule(size_t indexRule, const Grammar & grammar)
 	{
-
 		std::vector<GrammarSymbol> result;
 		std::vector<GrammarRule> rules;
 
@@ -135,22 +129,21 @@ struct Table
 	}
 
 
-	Table() {};
+	OldTable() {};
 
-	Table(const std::vector<TableNode> & left, const std::vector<std::vector<TableNode>> & right):
+	OldTable(const std::vector<OldTableNode> & left, const std::vector<std::vector<OldTableNode>> & right):
 		left(left), right(right)
 	{
 		
 	}
 
-	void bar(Table && table)
+	size_t GetFreeIndex()
 	{
-		Table newTab = table;
+		
 	}
 
 
-
-	Table(const Grammar & grammar, const GrammarRule & rule, size_t index, Type type = LEFT)
+	OldTable(const Grammar & grammar, const GrammarRule & rule, size_t index, Type type = LEFT)
 	{
 
 		int a = 3;
@@ -174,7 +167,9 @@ struct Table
 		//дл€ каждого элемента левой части (тк может быть несколько альтернатив правил) строим правую часть (цепочка нод с индексами дл€ правой части правила)
 		for (size_t i = 0; i < rulesWithNonTerm.size(); ++i)
 		{
-			right[i].push_back(std::vector<TableNode>());
+			//TODO: жалуетс€
+			//right[i].push_back(std::vector<TableNode>());
+
 			//fillRightPart (можно вынести в функцию!!)
 			for (auto el2 : rulesWithNonTerm[i].right)
 			{
@@ -204,8 +199,8 @@ struct Table
 
 		}
 	}
-	std::vector<TableNode> left;
-	std::vector<std::vector<TableNode>> right;
+	std::vector<OldTableNode> left;
+	std::vector<std::vector<OldTableNode>> right;
 };
 
 class LLBuilder
@@ -225,5 +220,8 @@ public:
 // 
 // 	}
 
-	std::vector<Table> tables;
+	std::vector<OldTable> tables;
 };
+
+
+

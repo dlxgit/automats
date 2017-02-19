@@ -80,18 +80,22 @@
 <arithmetic_beginning> -> -
 <arithmetic_beginning> -> E
 
-<arithmetic_expression> -> <arithmetic_beginning> <term>
-<arithmetic_expression> -> <arithmetic_expression_increase>
+<arithmetic_expression_basic> -> <arithmetic_beginning> <term>
+
+<arithmetic_expression> -> <arithmetic_expression_basic>
+<arithmetic_expression> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
 
 //arithmetic expr inc
 
-<arithmetic_expression_increase> -> <arithmetic_beginning> <term> <arithmetic_expression>
+<arithmetic_expression_increase> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
 <arithmetic_expression_increase> -> E;
 
 //bool expression
-<bool_expression> -> <term>
+<bool_expression_beginning> -> !
+<bool_expression_beginning> -> E
+
+<bool_expression_basic> -> <bool_expression_beginning> <term>
 <bool_expression> -> <bool_expression_increase>
-<bool_expression> -> ! <bool_expression>
 
 //bool expr inc
 <bool_symbol> -> <
@@ -103,10 +107,10 @@
 <bool_symbol> -> &&
 <bool_symbol> -> ||
 
-<bool_expression_increase> -> <bool_symbol> <term> <bool_expression>
+<bool_expression_increase> -> <bool_expression_basic> <bool_symbol> <bool_expression_increase> 
 <bool_expression_increase> -> E;
 			
-            
+
 program test
 {
 	var

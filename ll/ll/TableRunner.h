@@ -17,6 +17,44 @@ struct TableRunner
 	{};
 
 
+
+	std::vector<std::string> getFirstTerms(std::vector<std::string> & items, size_t iRule)
+	{
+		for (size_t i = 0; i < m_tables[iRule].m_nodes.size(); ++i)
+		{
+			if (m_tables[iRule].m_nodes[i][0].token == "<PAREN_EXPR>")
+			{
+				int abc = 3;
+			}
+			if (isTerminal(m_tables[iRule].m_nodes[i][0].token))
+			{
+				items.push_back(m_tables[iRule].m_nodes[i][0].token);
+			}
+			else
+			{
+				std::vector<std::string> plus = getFirstTerms(items, getTableIndexByI1(m_tables[iRule].m_nodes[i][0].i1));
+				items.insert(items.end(), plus.begin(), plus.end());
+			}
+
+		}
+		return items;
+	}
+
+	bool onlyInEpsilon(size_t iRule, std::string token)
+	{
+		std::vector<std::string> vec = getFirstTerms(std::vector<std::string>(), iRule);
+		
+		for (auto el : vec)
+		{
+			if (el == token)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 	size_t getIndexOfTableId(size_t id)
 	{
 		for (size_t i = 0; i < m_tables.size(); ++i)
@@ -164,6 +202,7 @@ struct TableRunner
 			//переходу к другой подтаблице пока не достигнем нужного напр множества
 			if (index == 0 && isTerminal(m_tables[indexTable].m_nodes[indexSubtable][0].token))
 			{
+
 				if (token != m_tables[indexTable].m_nodes[indexSubtable][0].token)
 				{
 					//переходу к другой подтаблице(другое направляющее множество)
@@ -183,15 +222,25 @@ struct TableRunner
 					indexSubtable++;
 					continue;
 
+				}			
+			}
+			else if (index == 0)
+			{
+				if (onlyInEpsilon(indexTable, token))
+				{
+					int abc = 3;
+					updateValuesFromStack();
+					m_stack.pop();
+					continue;
 				}
-				
 			}
 
 
 			//считываем тип символа
 			if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
 			{
-				if (m_tables[indexTable].m_nodes[indexSubtable].size() >= index)
+
+				if (m_tables[indexTable].m_nodes[indexSubtable].size() > index + 1)
 				{
 					m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
 
@@ -204,6 +253,11 @@ struct TableRunner
 				else
 				{
 					//TODO: это последний символ в таблице, а значит? не заносим в стек?
+					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
+					indexSubtable = 0;
+					index = 0;
+					continue;
+
 				}
 
 			}

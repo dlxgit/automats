@@ -1,0 +1,96 @@
+﻿%token a b
+%% /* LL(1) */
+
+
+S : a A a a
+  | b A b a ;
+A : /*eps*/
+  | b ;
+
+FULL_PROGRAM : program id SCOPE . ;
+
+VAR : var { VAR_LIST } ;
+
+VAR_LIST : VARIABLE_DEFINE ;
+VAR_LIST : VARIABLE_DEFINE VAR_LIST ;
+
+VARIABLE_DEFINE : VARIABLE_TYPE ID ;
+
+VARIABLE_TYPE : bool ;
+VARIABLE_TYPE : int ;
+VARIABLE_TYPE : bool [ number ] ;
+VARIABLE_TYPE : int [ number ] ;
+
+SCOPE : { VAR STATEMENT_LIST } ;
+SCOPE : { STATEMENT_LIST } ;
+
+STATEMENT_LIST : STATEMENT ;
+STATEMENT_LIST :  STATEMENT_LIST ;
+
+STATEMENT : INPUT ;
+STATEMENT : OUTPUT ;
+STATEMENT : IF ;
+STATEMENT : WHILE ;
+STATEMENT : PAREN_EXPR ;
+STATEMENT : EXPR ;
+			  			  
+INPUT : read ( ID ) ;
+
+OUTPUT : print PAREN_EXPR ;
+OUTPUT : print ID ;
+
+IF : if PAREN_EXPR SCOPE ;
+IF : if PAREN_EXPR SCOPE else SCOPE ;
+
+WHILE : while PAREN_EXPR SCOPE ;
+
+PAREN_EXPR : ( EXPR ) ;
+
+EXPR : arithmetic_expression ;
+EXPR : bool_expression ;
+
+term : variable ;
+term : array_element ;
+term : paren_expression ;
+term : expression ;
+term : value ;
+
+
+arithmetic_symbol : + ;
+arithmetic_symbol : : ;
+arithmetic_symbol : * ;
+arithmetic_symbol : /
+arithmetic_symbol : % ;
+
+
+arithmetic_beginning : + ;
+arithmetic_beginning : : ;
+arithmetic_beginning : E ;
+
+arithmetic_expression_basic : arithmetic_beginning term ;
+
+arithmetic_expression : arithmetic_expression_basic ;
+arithmetic_expression : arithmetic_expression_basic arithmetic_expression_increase ;
+
+arithmetic_expression_increase : arithmetic_expression_basic arithmetic_expression_increase ;
+arithmetic_expression_increase : E; ;
+
+bool_expression_beginning : ! ;
+bool_expression_beginning : E ;
+ 
+bool_expression_basic : bool_expression_beginning term ;
+bool_expression : bool_expression_increase ;
+
+
+bool_symbol : <;
+bool_symbol : >
+bool_symbol : => ;
+bool_symbol : <= ;
+bool_symbol : == ;
+bool_symbol : != ;
+bool_symbol : && ;
+bool_symbol : || ;
+
+bool_expression_increase : bool_expression_basic bool_symbol bool_expression_increase  ;
+bool_expression_increase : E; ;
+			

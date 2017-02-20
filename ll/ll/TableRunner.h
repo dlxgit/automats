@@ -20,6 +20,16 @@ struct TableRunner
 
 	std::vector<std::string> getFirstTerms(std::vector<std::string> & items, size_t iRule)
 	{
+		
+		std::string templ = m_tables[iRule].m_head.token;
+		for (auto el : items)
+		{
+			if (templ == el)
+			{
+				return std::vector<std::string>();
+			}
+		}
+
 		for (size_t i = 0; i < m_tables[iRule].m_nodes.size(); ++i)
 		{
 			if (m_tables[iRule].m_nodes[i][0].token == "<PAREN_EXPR>")
@@ -33,7 +43,23 @@ struct TableRunner
 			else
 			{
 				std::vector<std::string> plus = getFirstTerms(items, getTableIndexByI1(m_tables[iRule].m_nodes[i][0].i1));
-				items.insert(items.end(), plus.begin(), plus.end());
+				for (auto el : plus)
+				{
+					bool has = false;
+					for (auto el2 : items)
+					{
+						if (el == el2)
+						{
+							has = true;
+						}
+					}
+					if (!has)
+					{
+						items.push_back(el);
+					}
+				}
+				//items.insert(items.end(), plus.begin(), plus.end());
+
 			}
 
 		}
@@ -42,12 +68,17 @@ struct TableRunner
 
 	bool onlyInEpsilon(size_t iRule, std::string token)
 	{
+		if (iRule == 6 && token == "}")
+		{
+			int abc = 3;
+		}
 		std::vector<std::string> vec = getFirstTerms(std::vector<std::string>(), iRule);
 		
 		for (auto el : vec)
 		{
 			if (el == token)
 			{
+				
 				return false;
 			}
 		}
@@ -177,6 +208,17 @@ struct TableRunner
 
 		while (index < m_tables[indexTable].m_nodes[indexSubtable].size() || !m_stack.empty())
 		{
+			
+			//std::cout << "Entering: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+			if (index == 3 && indexTable == 1)
+			{
+				int abc = 3;
+			}
+			if (index == 0 && indexTable == 7)
+			{
+				int abc = 3;
+			}
+
 			if (index >= m_tables[indexTable].m_nodes[indexSubtable].size())
 			{
 				//это значит мы считали всю цепочку => если стек не пуст -> удаляем ласт элемент и делаем continue
@@ -190,6 +232,7 @@ struct TableRunner
 
 
 			std::string token = m_tokens[tokenID];
+
 			if (token == "}")
 			{
 				int abc = 3;

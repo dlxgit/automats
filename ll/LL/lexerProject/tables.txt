@@ -95,10 +95,10 @@ E 0 33
 
 <VARIABLE> 77700 7701
 = 7703 7702
-VALUE 7704 7703
+<value> 5600 7703
 ; 0 7704
 
-<VARIABLE> 77800 7801
+<VARIABLE> 77700 7801
 = 7803 7802
 { 7804 7803
 <VALUELIST> 200 7804
@@ -202,8 +202,8 @@ while 142 141
 <arithmetic_expression> 1210 1211
 
 <arithmetic_expression_basic> 1220 1211
-<arithmetic_expression_increase> 1240 1212
 
+<arithmetic_expression_increase> 1240 1212
 }}
 
 
@@ -323,19 +323,19 @@ E 0 1335
 }}
 <term> 1410 1411
 
-<variable> 1420 1411
+<variable> 77700 1411
 
 <PAREN_EXPR> 500 1412
 
 <EXPR> 1200 1413
 
-VALUE 0 1414
+<value> 5600 1414
 }}
 
 
 
 }}
-<variable> 1420 1421
+<variable> 77700 1421
 
 ID 0 1421
 
@@ -351,13 +351,18 @@ ID 1432 1431
 [ 1433 1432
 INT 1434 1433
 ] 0 1434
-
 }}
 
 
 
 
+}}
+<value> 5600 5601
 
+INT 0 5601
+
+BOOL 0 5602
+}}
 
 
 

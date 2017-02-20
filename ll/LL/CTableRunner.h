@@ -136,7 +136,7 @@ struct TableRunner
 
 	void DoPushStack(size_t i, size_t j, size_t k)
 	{
-		m_tables[i].m_nodes[j][k]
+		//m_tables[i].m_nodes[j][k]
 	}
 
 	bool onlyInEpsilon(size_t iRule, std::string token)
@@ -348,13 +348,13 @@ struct TableRunner
 				{
 					updateValuesFromStack();
 					m_stack.pop();
+					m_tokensStack.pop();
 					continue;
 				}
 			}
 
 
 			std::string token = m_tokens[tokenID];
-
 
 
 			//переходу к другой подтаблице пока не достигнем нужного напр множества
@@ -417,6 +417,7 @@ struct TableRunner
 				//непоследний символ
 				if (m_tables[indexTable].m_nodes[indexSubtable].size() > index + 1)
 				{
+					m_tokensStack.push(tokenID);
 					m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
 
 					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
@@ -444,6 +445,8 @@ struct TableRunner
 				}
 				else
 				{
+					m_stack.pop();
+					m_tokensStack.top();
 					std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
 					throw(std::invalid_argument("Err"));
 				}
@@ -460,6 +463,7 @@ struct TableRunner
 
 	std::vector<Table> m_tables;
 	std::vector<std::string> m_tokens;
+	std::stack<size_t> m_tokensStack;
 	std::stack<size_t> m_stack;
 
 };

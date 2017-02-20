@@ -24,7 +24,6 @@
 <SCOPE> -> { <VAR> <STATEMENT_LIST> }
 
 //st list
-<STATEMENT_LIST> -> <STATEMENT>
 <STATEMENT_LIST> -> <STATEMENT> <STATEMENT_LIST>
 <STATEMENT_LIST> -> E
 
@@ -89,20 +88,22 @@
 
 <arithmetic_expression_basic> -> <arithmetic_beginning> <term>
 
-<arithmetic_expression> -> <arithmetic_expression_basic>
 <arithmetic_expression> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
 
-//arithmetic expr inc
-
-<arithmetic_expression_increase> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
+<arithmetic_expression_increase> -> <arithmetic_expression_basic> <arithmetic_symbol> <term> <arithmetic_expression_increase>
 <arithmetic_expression_increase> -> E;
 
+
+
 //bool expression
+<bool_expression> -> <bool_expression_basic> <bool_expression_increase>
+
+<bool_expression_basic> -> <bool_expression_beginning> <term>
 <bool_expression_beginning> -> !
 <bool_expression_beginning> -> E
 
-<bool_expression_basic> -> <bool_expression_beginning> <term>
-<bool_expression> -> <bool_expression_increase>
+<bool_expression_increase> -> <bool_expression_basic> <bool_symbol> <bool_expression_basic> <bool_expression_increase>
+<bool_expression_increase> -> E;
 
 //bool expr inc
 <bool_symbol> -> <
@@ -114,9 +115,6 @@
 <bool_symbol> -> &&
 <bool_symbol> -> ||
 
-<bool_expression_increase> -> <bool_expression_basic> <bool_symbol> <bool_expression_increase> 
-<bool_expression_increase> -> E;
-			
 
 program test
 {

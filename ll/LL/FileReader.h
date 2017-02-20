@@ -156,6 +156,23 @@ public:
 		return tableNodes;
 	}
 
+	static std::vector<std::string> ReadTokens()
+	{
+		std::ifstream inputFile("D:/Automats/Tables/ll/LL/lexerProject/lexerOutput.txt");
+		std::vector<std::string> result;
+		std::string line;
+		while (std::getline(inputFile, line))
+		{
+			result.push_back(line);
+		}
+		return result;
+	}
+
+	std::vector<Table> GetTables()
+	{
+		return m_tables;
+	}
+
 private:
 	std::vector<std::vector<std::string>> m_strTables;
 	std::vector<Table> m_tables;

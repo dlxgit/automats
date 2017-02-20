@@ -6,73 +6,230 @@
 #include <vector>
 #include <string>
 #include "GrammarParser.h"
-#include "LLBuilder.h"
 #include <stack>
-
-
-struct vec2
-{
-	vec2(int i1, int i2)
-		:i1(i1), i2(i2)
-	{};
-	int i1;
-	int i2;
-};
-
-struct LL1TableString
-{
-	LL1TableString(const std::vector<std::string> & input, bool shift, int transition, bool stack, bool error, bool end);
-
-	int transition;
-	bool error;
-	bool shift;
-	bool end;
-	bool stack;
-	std::vector<std::string> input;
-};
-
-typedef std::vector<LL1TableString> LL1Table;
-
-
+#include "FileReader.h"
 
 struct TableRunner
 {
+	TableRunner(const std::vector<Table> & tables, const std::vector<std::string> & tokens)
+		: m_tables(tables)
+		, m_tokens(tokens)
+	{};
 
-	static void Run(std::vector<std::string> parts, std::vector<OldTable> tables)
+
+	size_t getIndexOfTableId(size_t id)
 	{
-		//find first terminal
+		for (size_t i = 0; i < m_tables.size(); ++i)
+		{
+			if (m_tables[i].m_head.i1 == id)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 
-		std::vector<std::string>::iterator current = parts.begin();
+	size_t chooseRightSubTable(size_t tableId, std::string token)
+	{
+		for (size_t i = 0; i < m_tables[getIndexOfTableId(tableId)].m_nodes.size(); ++i)
+		{
+			//if (tableId)
+		}
+	}
 
-		vec2 state = vec2(0, 0);
-
-		//GrammarRule axiom = grammar[0];
-		
-// 		for (auto el : axiom.right)
-// 		{
-// 			std::vector<size_t> indexes = Table::GetFirstTerminalsFromRule(0, grammar);
-// 		}
-		
-		
-// 		for (auto el : grammar)
-// 		{
-// 			if (el.right[0].val == *current)
-// 		}
+	bool isTerminal(std::string item)
+	{
+		return !(item[0] == '<' && item[item.size() - 1] == '>');
 	}
 
 
-	static std::vector<std::string> Parse(const std::string & text)
+	size_t getTableIndexByI1(size_t i1)
 	{
-		std::vector<std::string> commandParts;
-		boost::split(commandParts, text, boost::is_any_of(" "));
-		return commandParts;
+		for (size_t i = 0; i < m_tables.size(); ++i)
+		{
+			if (m_tables[i].m_head.i1 == i1)
+			{
+				return i;
+			}
+		}
+		throw (std::logic_error("not found index"));
 	}
-	
 
 
-	bool CheckInputSequence(const std::vector<std::string>& inputStr, const LL1Table & table, bool except = true);
-	
-	size_t GetCurrentTransition(const LL1TableString & row, size_t currentRowCount);
-		
+	size_t getIndexOfNode(size_t indexTable, size_t indexSubtable, size_t indexNode)
+	{
+		for (size_t i = 0; i < m_tables[indexTable].m_nodes[indexSubtable].size(); ++i)
+		{
+			if (m_tables[indexTable].m_nodes[indexSubtable][i].i1 == i1)
+			{
+				return i;
+			}
+		}
+		return std::string::npos;
+	}
+
+	TableNode getNextElement(size_t indexTable, size_t indexSubtable, size_t i1)
+	{
+		size_t idCurrent = getIndexOfNode(indexTable, indexSubtable, i1);
+		if (m_tables[indexTable].m_nodes[indexSubtable].size() > idCurrent)
+		{
+			return m_tables[indexTable].m_nodes[indexSubtable][idCurrent];
+		}
+		//throw(std::invalid_argument(""))
+	}
+
+	bool hasNext(size_t indexTable, size_t indexSubtable, size_t indexNode)
+	{
+
+	}
+
+	void pushNext(size_t indexTable, size_t indexSubtable, size_t indexNode)
+	{
+		size_t idCurrent = getIndexOfNode(indexTable, indexSubtable, i1);
+		if (m_tables[indexTable].m_nodes[indexSubtable].size() > idCurrent)
+		{
+			m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][idCurrent + 1].i2);
+		}
+	}
+
+	void updateValuesFromStack()
+	{
+		size_t i2 = m_stack.top();
+		for (size_t i = 0; i < m_tables.size(); ++i)
+		{
+			for (size_t k = 0; k < m_tables[i].m_nodes.size(); ++k)
+			{
+				for (size_t j = 0; j < m_tables[i].m_nodes[k].size(); ++j)
+				{
+					if (m_tables[i].m_nodes[k][j].i2 == i2)
+					{
+						index = j;
+						indexSubtable = k;
+						indexTable = i;
+						return;
+					}
+				}
+			}
+		}
+		throw(std::logic_error("logic_err"));
+	}
+
+	bool isEpsilon()
+	{
+		for (size_t i = 0; i < m_tables[indexTable].m_nodes.size(); ++i)
+		{
+			if (m_tables[indexTable].m_nodes[i][0].token == "E")
+			{
+				index = 1;
+				indexSubtable = i;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Run()
+	{
+
+		i1 = 0;
+		size_t tokenID = 0;
+		indexSubtable = 0;
+		indexTable = 0;
+		index = 0;
+
+		while (index < m_tables[indexTable].m_nodes[indexSubtable].size() || !m_stack.empty())
+		{
+			if (index >= m_tables[indexTable].m_nodes[indexSubtable].size())
+			{
+				//это значит мы считали всю цепочку => если стек не пуст -> удаляем ласт элемент и делаем continue
+				if (!m_stack.empty())
+				{
+					updateValuesFromStack();
+					m_stack.pop();
+					continue;
+				}
+			}
+
+
+			std::string token = m_tokens[tokenID];
+			if (token == "}")
+			{
+				int abc = 3;
+			}
+			if (tokenID == 6)
+			{
+				int abc = 3;
+			}
+
+			//переходу к другой подтаблице пока не достигнем нужного напр множества
+			if (index == 0 && isTerminal(m_tables[indexTable].m_nodes[indexSubtable][0].token))
+			{
+				if (token != m_tables[indexTable].m_nodes[indexSubtable][0].token)
+				{
+					//переходу к другой подтаблице(другое направляющее множество)
+					if (indexSubtable == m_tables[indexTable].m_nodes.size() - 1)
+					{
+						if (isEpsilon())
+						{
+							//indexSubtable++;
+							continue;
+						}
+						else
+						{
+							//TODO:функция, которая выводит ошибку
+							throw(std::invalid_argument("Не получен ожидаемый символ(напр множество)."));
+						}
+					}
+					indexSubtable++;
+					continue;
+
+				}
+				
+			}
+
+
+			//считываем тип символа
+			if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
+			{
+				if (m_tables[indexTable].m_nodes[indexSubtable].size() >= index)
+				{
+					m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+
+					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
+					index = 0;
+					indexSubtable = 0;
+
+					continue;
+				}
+				else
+				{
+					//TODO: это последний символ в таблице, а значит? не заносим в стек?
+				}
+
+			}
+			else
+			{
+				if (m_tables[indexTable].m_nodes[indexSubtable][index].token == token)
+				{
+					index++;
+				}
+				else
+				{
+					throw(std::invalid_argument("Err"));
+				}
+			}
+
+			++tokenID;
+		}
+	};
+
+	size_t indexTable;
+	size_t indexSubtable;
+	size_t i1;
+	size_t index;
+
+	std::vector<Table> m_tables;
+	std::vector<std::string> m_tokens;
 	std::stack<size_t> m_stack;
+
 };

@@ -63,7 +63,7 @@
 <EXPR> -> <arithmetic_expression>
 <EXPR> -> <bool_expression>
 
-//приоритет операций +-/* (сначала унарный минус и скобки, */, +-)
+
 //term
 <term> -> <variable>
 <term> -> <paren_expression>

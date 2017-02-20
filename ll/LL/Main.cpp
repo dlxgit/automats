@@ -1,12 +1,12 @@
 #include "GrammarParser.h"
 #include "LLBuilder.h"
-#include "TableRunner.h"
+#include "CTableRunner.h"
 #include <fstream>
 #include "FileReader.h"
 
 
 //TODO: при разборе в переходе Table() проверять, если индекс перехода в существующей таблице или вне ее (если нетерминал)
-
+//TODO: грамматика неправильная?
 
 bool HasOrSymbol(const GrammarRule & rule)
 {

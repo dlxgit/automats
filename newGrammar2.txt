@@ -1,6 +1,6 @@
-п»ї//РґР»СЏ С‚РµСЂРјРёРЅР°Р»РѕРІ (РїРµСЂРµРјРµРЅРЅС‹С… РёР· Р»РµРєСЃРµСЂР°) СѓР±СЂР°С‚СЊ <>
-//СЃРґРµР»Р°С‚СЊ С‡С‚РѕР±С‹ РёР· <VAR> РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃС‡РёС‚С‹РІР°С‚СЊ РЅРёС‡РµРіРѕ (РїСЂРѕРїСѓСЃС‚РёС‚СЊ Р±Р»РѕРє)
-
+//для терминалов (переменных из лексера) убрать <>
+//сделать чтобы из <VAR> можно было считывать ничего (пропустить блок)
+//TODO: что с ; в стейтментах?
 
 //program
 <FULL_PROGRAM> -> program id <SCOPE> .
@@ -24,7 +24,7 @@
 <SCOPE> -> { <VAR> <STATEMENT_LIST> }
 
 //st list
-<STATEMENT_LIST> -> <STATEMENT> <STATEMENT_LIST>
+<STATEMENT_LIST> -> <STATEMENT> ; <STATEMENT_LIST>
 <STATEMENT_LIST> -> E
 
 //statement
@@ -34,18 +34,22 @@
 <STATEMENT> -> <WHILE>
 <STATEMENT> -> <PAREN_EXPR>
 <STATEMENT> -> <EXPR>
-<STATEMENT> -> <variable> = value ;
-<STATEMENT> -> <variable> = { valueList } ;
+<STATEMENT> -> <variable> = <assign_variable>
 
-<valueList> -> term , <valueList>
-<valueList> -> E
+<valueList> -> <EXPR> <valueList_append>
+
+<valueList_append> -> , <EXPR> <valueList_append>
+<valueList_append> -> E
+
+<assign_variable> -> <EXPR>
+<assign_variable> -> <valueList>
+
 
 //input			  
 <INPUT> -> read ( <ID> ) ;
 
 //output
 <OUTPUT> -> print <PAREN_EXPR> ;
-<OUTPUT> -> print <ID> ;
 
 //if
 <IF> -> if <PAREN_EXPR> <SCOPE> <IF_ENDING>
@@ -65,12 +69,10 @@
 
 //term
 <term> -> <variable>
-<term> -> <paren_expression>
-<term> -> <expression>
 <term> -> value
 
-<variable> -> id
-<variable> -> id [ number ]
+
+<variable> -> id <var_array_define_optional>
 
 
 //arithmetic expression

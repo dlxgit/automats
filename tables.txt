@@ -89,35 +89,47 @@ E 0 33
 
 <WHILE> 140 104
 
-<PAREN_EXPR> 150 105
+<PAREN_EXPR> 500 105
 
 <EXPR> 1200 106
 
 <VARIABLE> 77700 7701
 = 7703 7702
-VALUE 7704 7703
+<assign_variable> 12150 7703
 ; 0 7704
-
-<VARIABLE> 77800 7801
-= 7803 7802
-{ 7804 7803
-<VALUELIST> 200 7804
-} 7806 7805
-; 0 7806
 }}
 
+
+
+}}
+<assign_variable> 12150 12151
+
+<EXPR> 1200 12151
+
+<VALUELIST> 200 12151
+}}
 
 
 }}
 <VALUELIST> 200 201
 
-<term> 202 201
-, 203 202
-<VALUELIST> 200 203
+<EXPR> 1200 201
+<valueList_append> 12050 202
 
 E 0 204
 }}
 
+
+
+}}
+<valueList_append> 12050 12051
+
+, 12052 12051
+<EXPR> 1200 12052
+<valueList_append> 12050 12053
+
+E 0 12054
+}}
 
 
 }}
@@ -325,10 +337,6 @@ E 0 1335
 
 <variable> 1420 1411
 
-<PAREN_EXPR> 500 1412
-
-<EXPR> 1200 1413
-
 VALUE 0 1414
 }}
 
@@ -338,8 +346,7 @@ VALUE 0 1414
 <variable> 1420 1421
 
 ID 0 1421
-
-<array_element> 1430 1422
+<var_array_define_optional> 60 1422
 }}
 
 
@@ -351,8 +358,7 @@ ID 1432 1431
 [ 1433 1432
 INT 1434 1433
 ] 0 1434
-
-
+}}
 
 
 

@@ -71,7 +71,8 @@ E 0 65
 <STATEMENT_LIST> 30 31
 
 <STATEMENT> 100 31
-<STATEMENT_LIST> 30 32
+; 33 32
+<STATEMENT_LIST> 30 33
 
 E 0 33
 }}
@@ -95,15 +96,17 @@ E 0 33
 
 <VARIABLE> 77700 7701
 = 7703 7702
-<value> 5600 7703
-; 0 7704
+<assign_variable> 12150 7703
+}}
 
-<VARIABLE> 77700 7801
-= 7803 7802
-{ 7804 7803
-<VALUELIST> 200 7804
-} 7806 7805
-; 0 7806
+
+
+}}
+<assign_variable> 12150 12151
+
+<EXPR> 1200 12151
+
+<VALUELIST> 200 12151
 }}
 
 
@@ -111,11 +114,21 @@ E 0 33
 }}
 <VALUELIST> 200 201
 
-<term> 202 201
-, 203 202
-<VALUELIST> 200 203
+<EXPR> 1200 201
+<valueList_append> 12050 202
 
 E 0 204
+}}
+
+
+}}
+<valueList_append> 12050 12051
+
+, 12052 12051
+<EXPR> 1200 12052
+<valueList_append> 12050 12053
+
+E 0 12054
 }}
 
 
@@ -325,10 +338,6 @@ E 0 1335
 
 <variable> 77700 1411
 
-<PAREN_EXPR> 500 1412
-
-<EXPR> 1200 1413
-
 <value> 5600 1414
 }}
 
@@ -338,8 +347,7 @@ E 0 1335
 <variable> 77700 1421
 
 ID 0 1421
-
-<array_element> 1430 1422
+<var_array_define_optional> 60 1422
 }}
 
 
@@ -363,17 +371,3 @@ INT 0 5601
 
 BOOL 0 5602
 }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-

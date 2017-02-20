@@ -9,6 +9,8 @@
 #include <stack>
 #include "FileReader.h"
 
+//когда пушим в стек, мы автоматом пушим айди токена
+
 struct TableRunner
 {
 	TableRunner(const std::vector<Table> & tables, const std::vector<std::string> & tokens)
@@ -62,6 +64,24 @@ struct TableRunner
 	}
 
 
+	bool firstTermHaveOnlyEpsilon(size_t i, size_t j, size_t k, std::string token)
+	{
+		if (isTerminal(m_tables[i].m_nodes[j][k].token))
+		{
+			return token == m_tables[i].m_nodes[j][k].token;
+		}
+		else
+		{
+			for (size_t i = 0; i < m_tables[getTableIndexByI1(m_tables[i].m_nodes[j][k].i1)].m_nodes.size(); ++i)
+			{
+				//firstTermHaveOnlyEpsilon(getTableIndexByI1(m_tables[i].m_nodes[j][k].i1), );
+			}
+
+		}
+	}
+
+	//TODO: добавит функцию котора€ при ошибке поднимаетс€ по стеку и заходит в соседние подтаблицы, где такие же 
+
 
 	std::vector<std::string> getFirstTerms(std::vector<std::string> & items, size_t iRule)
 	{
@@ -113,6 +133,12 @@ struct TableRunner
 		return items;
 	}
 
+
+	void DoPushStack(size_t i, size_t j, size_t k)
+	{
+		m_tables[i].m_nodes[j][k]
+	}
+
 	bool onlyInEpsilon(size_t iRule, std::string token)
 	{
 		if (iRule == 6 && token == "}")
@@ -157,8 +183,6 @@ struct TableRunner
 							 {
 								 if (m_tables[l].m_nodes[ll][0].i2 == x.i2)
 								 {
-
-
 									 m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
 									 index = 0;
 									 indexSubtable = ll;
@@ -213,6 +237,7 @@ struct TableRunner
 				return i;
 			}
 		}
+		std::cout << "LOGIC_ERR: i1 = " << i1 << std::endl;
 		throw (std::logic_error("not found index"));
 	}
 
@@ -289,6 +314,18 @@ struct TableRunner
 		return false;
 	}
 
+	size_t findI1OfTokenInTable(size_t tableId, std::string token)
+	{
+		std::vector<TableNode> vec;
+		for (size_t i = 0; i < m_tables[tableId].m_nodes.size(); ++i)
+		{
+			for (size_t j = 0; j < m_tables[tableId].m_nodes[i].size(); ++j)
+			{
+
+			}
+		}
+	}
+
 	void Run()
 	{
 
@@ -302,14 +339,6 @@ struct TableRunner
 		{
 			
 			//std::cout << "Entering: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-			if (index == 3 && indexTable == 1)
-			{
-				int abc = 3;
-			}
-			if (index == 0 && indexTable == 7)
-			{
-				int abc = 3;
-			}
 
 
 			if (index >= m_tables[indexTable].m_nodes[indexSubtable].size())
@@ -326,15 +355,6 @@ struct TableRunner
 
 			std::string token = m_tokens[tokenID];
 
-			if (indexTable == 1 && index == 3)
-			{
-				int a = 3;
-			}
-
-			if (token == "{")
-			{
-				int abc = 3;
-			}
 
 
 			//переходу к другой подтаблице пока не достигнем нужного напр множества
@@ -353,6 +373,7 @@ struct TableRunner
 						}
 						else
 						{
+							//должны подн€тьс€ по стеку?? и посмотреть дл€ таблицы выше другую альтернативу?
 							//TODO:функци€, котора€ выводит ошибку
 							throw(std::invalid_argument("Ќе получен ожидаемый символ(напр множество)."));
 						}
@@ -423,6 +444,7 @@ struct TableRunner
 				}
 				else
 				{
+					std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
 					throw(std::invalid_argument("Err"));
 				}
 			}

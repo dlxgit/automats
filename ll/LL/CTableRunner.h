@@ -189,11 +189,23 @@ struct TableRunner
 // 									 indexSubtable = ll;
 // 									 indexTable = l;
 
-									 std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-									 push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
-									 index = 0;
-									 indexSubtable = 0;
-									 indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
+									 if (m_tables[indexTable].m_nodes[indexSubtable].size() > index + 1)
+									 {
+										 std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+										 push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+										 index = 0;
+										 indexSubtable = 0;
+										 indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
+									 }
+									 else
+									 {
+										 index = 0;
+										 indexSubtable = 0;
+										 indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
+
+										 std::cout << "Push: 0" << std::endl;
+										 push(0);
+									 }
 									 return false;
 								 }
 							 }
@@ -362,7 +374,10 @@ struct TableRunner
 
 		while (index < m_tables[indexTable].m_nodes[indexSubtable].size() || !m_stack.empty())
 		{
-			
+			if (tokenID == m_tokens.size())
+			{
+				throw(std::exception("Error: out of tokens"));
+			}
 			//std::cout << "Entering: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
 
 
@@ -385,7 +400,7 @@ struct TableRunner
 						updateValuesFromStack();
 						pop();					
 					}
-					m_tokensStack.pop();
+					//m_tokensStack.pop();
 					continue;
 				}
 			}
@@ -505,16 +520,28 @@ struct TableRunner
 				}
 				else
 				{
-					pop();
-					m_tokensStack.top();
-					continue;
-					//std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
-					//throw(std::invalid_argument("Err"));
+					if (!m_stack.empty())
+					{
+						pop();
+						m_tokensStack.top();
+						continue;
+						
+					}
+					else
+					{
+						//std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
+#include <sstream>
+						std::stringstream ss;
+						ss << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
+
+						throw(std::exception(ss.str().c_str()));
+					}
 				}
 			}
 
 			++tokenID;
 		}
+		throw(std::exception("Success"));
 	};
 
 	size_t indexTable;

@@ -43,6 +43,8 @@ void BeginProgram(const std::string & fileName)
 	system(cmd.c_str());
 }
 
+
+
 int main()
 {
 	BeginProgram("lexerInput1.txt");
@@ -72,6 +74,13 @@ int main()
 	
 	try
 	{
+		std::vector<std::string> directionStack = tableRunner.GetDirectionStack("<arithmetic_expression>", "e");
+		std::cout << "STACK:" << std::endl;
+		for (auto el : directionStack)
+		{
+			std::cout << el << std::endl;
+		}
+		std::cout << "STACK_END" << std::endl;
 		tableRunner.Run();
 	}
 	catch (std::exception e)
@@ -81,7 +90,7 @@ int main()
 	
 
 
-	std::cout << "program has finished";
+	std::cout << "program has finished\n";
 	system("pause");
 	return 0;
 }

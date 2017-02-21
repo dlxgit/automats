@@ -1,8 +1,16 @@
 PROGRAM
 ID
 {
-+
+VAR
+{
+TYPENAME
+ID
+;
+}
+ID
+=
 INT
+;
 ;
 }
 .

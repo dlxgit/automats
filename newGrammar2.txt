@@ -116,6 +116,52 @@
 <bool_symbol> -> &&
 <bool_symbol> -> ||
 
+(+3)
+(3)
+((3+3) + (4+5) 1)
+
+paren_expr = (expr)
+paren_expr = (paren_expr) paren_expr_append
+
+paren_expr_append = mid basic_expr
+paren_expr_append = E
+
+expr = paren_expr
+expr = basic_expr
+
+basic_expr = <arithmetic_beginning> term <basic_expr_increase>
+
+basic_expr = (<arithmetic_beginning> term <increase_paren>
+
+<basic_expr_increase> = <mid> term <basic_expr_increase>
+<basic_expr_increase> = E
+
+<increase_paren> = <basic_expr_increase> ) <increase_paren>
+<increase_paren> = )
+
+
+
+(3 + 2 + (4+5) 1)
+
+<expr> = <beginning> <term> <binary_ending>
+<expr> = (<expr>) mid expr
+<expr> = <expr> mid expr
+<expr> = (<expr>)
+
+<expr_optional_append>
+
+(
+    (
+        3 + 2
+    )
+)
+
+
+<binary_ending> = <mid> expr
+<binary_ending> = E
+
+
+
 
 program test
 {

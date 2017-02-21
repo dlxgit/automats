@@ -1,0 +1,16 @@
+program test
+{
+	var
+	{
+		int a;
+		int b = 2;
+		bool isEmpty;
+		bool isInitialized = false;
+		
+	}
+	
+	if(a == b)
+	{
+		print(b);
+	}
+}

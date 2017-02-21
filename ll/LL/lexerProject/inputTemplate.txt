@@ -1,0 +1,10 @@
+program TEST
+{
+	var
+	{
+		int [3] a;
+		bool b;
+	}
+	
+	b = 3;
+}.

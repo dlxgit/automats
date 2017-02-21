@@ -69,7 +69,16 @@ int main()
 	//GetTheTables();
 
 	TableRunner tableRunner(FileReader("D:/Automats/Tables/ll/LL/lexerProject/tables.txt").GetTables(), FileReader::ReadTokens());
-	tableRunner.Run();
+	
+	try
+	{
+		tableRunner.Run();
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	
 
 
 	std::cout << "program has finished";

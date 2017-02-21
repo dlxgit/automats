@@ -183,10 +183,17 @@ struct TableRunner
 							 {
 								 if (m_tables[l].m_nodes[ll][0].i2 == x.i2)
 								 {
-									 m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+// 									 std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+// 									 push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+// 									 index = 0;
+// 									 indexSubtable = ll;
+// 									 indexTable = l;
+
+									 std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+									 push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
 									 index = 0;
-									 indexSubtable = ll;
-									 indexTable = l;
+									 indexSubtable = 0;
+									 indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
 									 return false;
 								 }
 							 }
@@ -274,7 +281,7 @@ struct TableRunner
 		size_t idCurrent = getIndexOfNode(indexTable, indexSubtable, i1);
 		if (m_tables[indexTable].m_nodes[indexSubtable].size() > idCurrent)
 		{
-			m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][idCurrent + 1].i2);
+			push(m_tables[indexTable].m_nodes[indexSubtable][idCurrent + 1].i2);
 		}
 	}
 
@@ -326,6 +333,24 @@ struct TableRunner
 		}
 	}
 
+	void pop()
+	{
+		//m_tables[getTableIndexByI1(m_stack.top())].m_head.token;
+		if (m_stack.empty())
+		{
+			throw(std::exception("Success"));
+		}
+		std::cout << "Pop:\t" << m_stack.top() << std::endl;
+		m_stack.pop();
+		
+	}
+
+	void push(size_t val)
+	{
+		//std::cout << "Push:\t" << m_tables[getTableIndexByI1(m_stack.top())].m_head.token << std::endl;
+		m_stack.push(val);
+	}
+
 	void Run()
 	{
 
@@ -346,8 +371,20 @@ struct TableRunner
 				//это значит мы считали всю цепочку => если стек не пуст -> удаляем ласт элемент и делаем continue
 				if (!m_stack.empty())
 				{
-					updateValuesFromStack();
-					m_stack.pop();
+					if (m_stack.top() == 0)
+					{
+						while (m_stack.top() == 0)
+						{
+							//std::cout << "Pop"
+							pop();
+						}
+						updateValuesFromStack();
+					}
+					else
+					{
+						updateValuesFromStack();
+						pop();					
+					}
 					m_tokensStack.pop();
 					continue;
 				}
@@ -355,7 +392,10 @@ struct TableRunner
 
 
 			std::string token = m_tokens[tokenID];
-
+			if (tokenID == 4)
+			{
+				int abc = 3;
+			}
 
 			//переходу к другой подтаблице пока не достигнем нужного напр множества
 			if (index == 0 && isTerminal(m_tables[indexTable].m_nodes[indexSubtable][0].token))
@@ -392,8 +432,20 @@ struct TableRunner
 				if (onlyInEpsilon(indexTable, token))
 				{
 					int abc = 3;
-					updateValuesFromStack();
-					m_stack.pop();
+					if (m_stack.top() == 0)
+					{
+						while (m_stack.top() == 0)
+						{
+							pop();
+						}
+						updateValuesFromStack();
+					}
+					else
+					{
+						updateValuesFromStack();
+						pop();
+						
+					}
 					continue;
 				}
 				else
@@ -410,6 +462,11 @@ struct TableRunner
 				}
 			}
 
+			if (tokenID == 3)
+			{
+				int abc = 3;
+			}
+
 
 			//считываем тип символа
 			if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
@@ -418,7 +475,9 @@ struct TableRunner
 				if (m_tables[indexTable].m_nodes[indexSubtable].size() > index + 1)
 				{
 					m_tokensStack.push(tokenID);
-					m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+
+					std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+					push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
 
 					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
 					index = 0;
@@ -428,12 +487,13 @@ struct TableRunner
 				}
 				else
 				{
+					std::cout << "Push: " << 0 << std::endl;
+					push(0);
 					//TODO: это последний символ в таблице, а значит? не заносим в стек?
 					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
 					indexSubtable = 0;
 					index = 0;
 					continue;
-
 				}
 
 			}
@@ -445,10 +505,11 @@ struct TableRunner
 				}
 				else
 				{
-					m_stack.pop();
+					pop();
 					m_tokensStack.top();
-					std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
-					throw(std::invalid_argument("Err"));
+					continue;
+					//std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
+					//throw(std::invalid_argument("Err"));
 				}
 			}
 

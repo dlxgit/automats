@@ -33,8 +33,9 @@
 <STATEMENT> -> <IF>
 <STATEMENT> -> <WHILE>
 <STATEMENT> -> <PAREN_EXPR>
-<STATEMENT> -> <EXPR>
 <STATEMENT> -> <variable> = <assign_variable>
+<STATEMENT> -> <EXPR>
+
 
 <valueList> -> <EXPR> <valueList_append>
 
@@ -87,7 +88,9 @@
 <arithmetic_beginning> -> -
 <arithmetic_beginning> -> E
 
-<arithmetic_expression_basic> -> <arithmetic_beginning> <term>
+<arithmetic_expression_basic> -> + <term>
+<arithmetic_expression_basic> -> - <term>
+<arithmetic_expression_basic> -> <term>
 
 <arithmetic_expression> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
 

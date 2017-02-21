@@ -9,6 +9,7 @@
 #include <stack>
 #include "FileReader.h"
 #include "TableHelper.h"
+#include <sstream>
 
 //когда пушим в стек, мы автоматом пушим айди токена
 
@@ -17,6 +18,14 @@ struct StackItem
 	size_t val;
 	bool isLast;
 };
+
+struct DirectionItem
+{
+	std::string item;
+	size_t subIndex;
+};
+
+typedef std::vector<DirectionItem> DirectionStack;
 
 struct TableRunner
 {
@@ -27,9 +36,9 @@ struct TableRunner
 		m_direction = TableHelper::ParseTablesForFirst(m_tables);
 	};
 
-	std::vector<std::string> GetDirectionStack(std::string rule, std::string token)
+	DirectionStack GetDirectionStack(const std::string & rule, const std::string & token)
 	{
-		std::vector<std::string> result;
+		DirectionStack result;
 		size_t tableId = getTableIndexByToken(rule);
 		//m_tokens[tableId]
 		for (size_t i = 0; i < m_direction[tableId].size(); ++i)
@@ -37,35 +46,35 @@ struct TableRunner
 			//мы нашли направляющее множество
 			if (m_direction[tableId][i] == token || m_direction[tableId][i] == "E")
 			{
-				result = { m_tables[tableId].m_head.token};
-				indexSubtable = i;
+				result = { { m_tables[tableId].m_head.token, i } };
+				//indexSubtable = i;
 				return result;
 			}
 			else if (!isTerminal(m_direction[tableId][i]))
 			{
 				size_t findingTableId = getTableIndexByToken(m_direction[tableId][i]);
 
-				result = { m_direction[tableId][i] };
-				std::vector<std::string> newStack = GetDirectionStack(m_tables[findingTableId].m_head.token, token);
+				result = { {m_direction[tableId][i], i} };
+				DirectionStack newStack = GetDirectionStack(m_tables[findingTableId].m_head.token, token);
 
 				if (newStack.empty())
 				{
 					continue;
 				}
 
-				for (auto el : m_tables[getTableIndexByToken(newStack[newStack.size() - 1])].m_nodes)
+				for (auto el : m_tables[getTableIndexByToken(newStack[newStack.size() - 1].item)].m_nodes)
 				{
 					if (el[0].token == token)
 					{
 						result.insert(result.end(), newStack.begin(), newStack.end());
-						if (result.size() > 1 && result[result.size() - 1] == result[result.size() - 2])
+						if (result.size() > 1 && result[result.size() - 1].item == result[result.size() - 2].item)
 						{
 							result.pop_back();
 						}
 						return result;
 					}
 				}
-				return std::vector<std::string>();
+				return DirectionStack();
 			}
 		}	
 	}
@@ -185,92 +194,6 @@ struct TableRunner
 	}
 
 
-	void DoPushStack(size_t i, size_t j, size_t k)
-	{
-		//m_tables[i].m_nodes[j][k]
-	}
-
-	bool onlyInEpsilon(size_t iRule, std::string token)
-	{
-		if (iRule == 6 && token == "}")
-		{
-			int abc = 3;
-		}
-
-		if (token == "")
-		{
-			int abc = 3;
-		}
-		std::vector<std::string> vec = getFirstTerms(std::vector<std::string>(), iRule);
-		
-		for (size_t i = 0; i < vec.size(); ++i)
-		{
-			if (vec[i] == token)
-			{
-
-// 				for (size_t n = 0; n < m_tables[iRule].m_nodes.size(); ++n)
-// 				{
-// 					for (size_t z = 0; z < m_tables[iRule].m_nodes[n].size(); ++z)
-// 					{
-// 						if (m_tables[iRule].m_nodes[n][z].token == token)
-// 						{
-// // 							index = 0;
-// // 							indexSubtable = n;
-// // 							indexTable = iRule;
-// 							return false;
-// 						}
-// 					}
-// 				}
-				auto res = getFirstNodes(std::vector<TableNode>(), iRule);
-				for (auto x : res)
-				{
-					if (x.token == token)
-					{
-						 index = 0;
-						 indexSubtable = 0;
-						 for (size_t l = 0; l < m_tables.size(); ++l)
-						 {
-							 for (size_t ll = 0; ll < m_tables[l].m_nodes.size(); ++ll)
-							 {
-								 if (m_tables[l].m_nodes[ll][0].i2 == x.i2)
-								 {
-// 									 std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-// 									 push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
-// 									 index = 0;
-// 									 indexSubtable = ll;
-// 									 indexTable = l;
-
-									 if (m_tables[indexTable].m_nodes[indexSubtable].size() > index + 1)
-									 {
-										 std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-										 push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
-										 index = 0;
-										 indexSubtable = 0;
-										 indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
-									 }
-									 else
-									 {
-										 std::cout << "Push: 0 " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-										 index = 0;
-										 indexSubtable = 0;
-										 indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
-										 push(m_tables[indexTable].m_nodes[indexSubtable][index].i2, true);
-									 }
-									 return false;
-								 }
-							 }
-						 }
-						 //indexTable = getTableIndexByI1(x.);
-					}
-				}
-
-				return false;
-			}
-		}
-		return true;
-	}
-
-
 	size_t getIndexOfTableId(size_t id)
 	{
 		for (size_t i = 0; i < m_tables.size(); ++i)
@@ -329,7 +252,7 @@ struct TableRunner
 	{
 		for (size_t i = 0; i < m_tables[indexTable].m_nodes[indexSubtable].size(); ++i)
 		{
-			if (m_tables[indexTable].m_nodes[indexSubtable][i].i1 == i1)
+			//if (m_tables[indexTable].m_nodes[indexSubtable][i].i1 == i1)
 			{
 				return i;
 			}
@@ -363,23 +286,13 @@ struct TableRunner
 
 	void updateValuesFromStack()
 	{
-		size_t i2 = m_stack.top().val;
-		if (m_stack.top().isLast)
-		{
-			return;
-		}
-
-		if (m_stack.top().isLast)
-		{
-			int abc = 3;
-		}
 		for (size_t i = 0; i < m_tables.size(); ++i)
 		{
 			for (size_t k = 0; k < m_tables[i].m_nodes.size(); ++k)
 			{
 				for (size_t j = 0; j < m_tables[i].m_nodes[k].size(); ++j)
 				{
-					if (m_tables[i].m_nodes[k][j].i2 == i2)
+					if (m_tables[i].m_nodes[k][j].i2 == m_stack.top())
 					{
 						index = j;
 						indexSubtable = k;
@@ -425,27 +338,82 @@ struct TableRunner
 		{
 			throw(std::exception("Success"));
 		}
-		if (m_stack.top().val == 13)
+		if (m_stack.top() == 13)
 		{
 			int abc = 3;
 		}
-		std::cout << "Pop:\t" << m_stack.top().val << " " << m_stack.top().isLast <<  std::endl;
-		m_stack.pop();
-		
+		std::cout << "Pop:\t" << m_stack.top() << " " <<  std::endl;
+		m_stack.pop();	
 	}
 
-	void push(size_t val, bool isLast = false)
+	void push(size_t val)
 	{
 		//std::cout << "Push:\t" << m_tables[getTableIndexByI1(m_stack.top().val)].m_head.token << std::endl;
 		//std::cout << "Push: " << m_tables[getTableIndexByI1(m_stack.top().val)].m_head.token << " " << isLast << std::endl;
-		std::cout << "push [isLast]: " << isLast << std::endl;
-		m_stack.push({ val, isLast });
+		m_stack.push(val);
+	}
+
+	size_t findI2ByToken(size_t indexTable, std::string token)
+	{
+		for (auto el : m_tables[indexTable].m_nodes)
+		{
+			for (auto el2 : el)
+			{
+				if (el2.token == token)
+				{
+					return el2.i2;
+				}
+			}
+		}
+		throw (std::exception("Logic_err: not found in findI2ByToken."));
+	}
+
+	bool pushDirection(DirectionStack stack)
+	{
+		m_tables[indexTable].m_nodes[indexSubtable][index];
+
+		size_t startStackSize = m_stack.size();
+
+		for (size_t i = 0; i < stack.size(); ++i)
+		{
+			if (m_tables[indexTable].m_nodes[indexSubtable][0].token == stack[i].item)
+			{
+				//заход в следующую подтаблицу
+				if (m_tables[indexTable].m_nodes[indexSubtable].size() > 1)
+				{
+					if (i == 0)
+					{
+						indexTable = getTableIndexByToken(stack[i].item);
+						indexSubtable = stack[i].subIndex;
+						continue;
+					}
+					std::cout << "Push from pushDirection(): " << stack[i].item << std::endl;
+					push(m_tables[indexTable].m_nodes[indexSubtable][1].i2);
+				}
+				
+				indexTable = getTableIndexByToken(stack[i].item);
+				indexSubtable = stack[i].subIndex;
+				continue;
+			}
+		}
+
+		if (m_stack.size() == startStackSize)
+		{
+			indexTable = getTableIndexByToken(stack.back().item);
+			indexSubtable = stack.back().subIndex;
+			index = 0;
+		}
+		else
+		{
+			indexTable = getTableIndexByToken(stack.back().item);
+			indexSubtable = stack.back().subIndex;
+			index = 0;
+		}
+		return true;
 	}
 
 	void Run()
 	{
-
-		i1 = 0;
 		size_t tokenID = 0;
 		indexSubtable = 0;
 		indexTable = 0;
@@ -457,212 +425,101 @@ struct TableRunner
 			{
 				throw(std::exception("Error: out of tokens"));
 			}
-			//std::cout << "Entering: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-
 
 			if (index >= m_tables[indexTable].m_nodes[indexSubtable].size())
 			{
 				//это значит мы считали всю цепочку => если стек не пуст -> удаляем ласт элемент и делаем continue
 				if (!m_stack.empty())
 				{
-					//std::cout << "Pop"
-					
-
 					updateValuesFromStack();
 					pop();
-					//index++;
+				}
+				//?
+				continue;
+			}
+
+			std::string token = m_tokens[tokenID];
+
+			//если мы вначале и ищем направляющее множество
+			if (index == 0)
+			{
+				auto st = GetDirectionStack(m_tables[indexTable].m_head.token, token);
+				if (st.empty())
+				{
+					//ошибка
+					std::stringstream ss;
+					ss << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
+					throw(std::exception(ss.str().c_str()));
+				}
+				if (m_tables[indexTable].m_head.token == st.back().item)
+				{
+					//то из текущего правила выводится сам терминал (без стеков)
+					int abc = 3;
+					indexSubtable = st.back().subIndex;
 				}
 				else
 				{
-					updateValuesFromStack();
-					pop();
+					//заполнить стек
+					pushDirection(st);
+// 					size_t tempI = findI2ByToken(indexTable, m_tables[indexTable].m_nodes[indexSubtable][0].token);
+// 					if (m_tables[indexTable].m_nodes[indexSubtable].size() > 1)
+// 					{
+// 						push(m_tables[indexTable].m_nodes[indexSubtable][1].i2);
+// 					}
+// 					for (auto el : st)
+// 					{
+// 						//tempI
+// 						//push();
+// 					}
+					continue;
 				}
-				//m_tokensStack.pop();
+				
+			}
+			//если мы не в начале и это нетерминал
+			else if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
+			{
+				std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+				push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+
+				indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
+				index = 0;
+				indexSubtable = 0;
+
 				continue;
 
 			}
 
-			std::string token = m_tokens[tokenID];
-			if (tokenID == 4)
+			if (m_tables[indexTable].m_nodes[indexSubtable][index].token == "E")
 			{
-				int abc = 3;
+				std::cout << "READ_EPSILON in: " << m_tables[indexTable].m_head.token << std::endl;
+				index++;
 			}
-
-			//переходу к другой подтаблице пока не достигнем нужного напр множества
-			if (index == 0 && isTerminal(m_tables[indexTable].m_nodes[indexSubtable][0].token))
+			else if (m_tables[indexTable].m_nodes[indexSubtable][index].token == token)
 			{
-
-				if (token != m_tables[indexTable].m_nodes[indexSubtable][0].token)
-				{
-					//переходу к другой подтаблице(другое направляющее множество)
-					if (indexSubtable == m_tables[indexTable].m_nodes.size() - 1)
-					{
-						if (isEpsilon())
-						{
-							//indexSubtable++;
-							continue;
-						}
-						else
-						{
-							if (m_stack.empty())
-							{
-								throw(std::invalid_argument("Error: terminal unmatched or stack is out."));
-							}
-							else
-							{
-								if (m_stack.top().val == 0)
-								{
-									//while (m_stack.top() == 0)
-									{
-										pop();
-									}
-
-									updateValuesFromStack();
-								}
-								else
-								{
-									updateValuesFromStack();
-									m_stack.pop();
-								}
-							}
-							//должны подняться по стеку?? и посмотреть для таблицы выше другую альтернативу?
-							//TODO:функция, которая выводит ошибку
-							//throw(std::invalid_argument("Не получен ожидаемый символ(напр множество)."));
-						}
-					}
-					indexSubtable++;
-					continue;
-
-				}			
-			}
-			else if (index == 0)
-			{
-			
-				if (onlyInEpsilon(indexTable, token))
-				{
-					if (token == ";")
-					{
-						int abc = 3;
-					}
-					int abc = 3;
-					if (m_stack.top().val == 0)
-					{
-
-							pop();
-						//pop();
-						
-						updateValuesFromStack();
-
-						if (index == m_tables[indexTable].m_nodes[indexSubtable].size() - 1)
-						{
-							updateValuesFromStack();
-							pop();
-						}
-					}
-					else
-					{
-						updateValuesFromStack();
-						pop();
-
-					}
-					continue;
-				}
-				else
-				{
-					int a = 3;
-					//TODO:  проблема в том, что если не только эпсилон, то нужно выбрать нужную подтаблицу и зайти в нее.
-
-// 					m_stack.push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
-// 
-// 					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
-// 					index = 0;
-// 					indexSubtable = 0;
-					continue;
-				}
-			}
-
-			if (tokenID == 3)
-			{
-				int abc = 3;
-			}
-
-
-			//считываем тип символа
-			if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
-			{
-				//непоследний символ
-				if (m_tables[indexTable].m_nodes[indexSubtable].size() > index + 1)
-				{
-					//m_tokensStack.push(tokenID);
-
-					std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-					push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
-
-					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
-					index = 0;
-					indexSubtable = 0;
-
-					continue;
-				}
-				else
-				{
-					std::cout << "Push: 0 " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-					push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2, true);
-					//TODO: это последний символ в таблице, а значит? не заносим в стек?
-					indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
-					indexSubtable = 0;
-					index = 0;
-					continue;
-				}
-
+				std::cout << "READ_token: " << token << " in: " << m_tables[indexTable].m_head.token << std::endl;
+				index++;
+				++tokenID;
 			}
 			else
 			{
-				if (m_tables[indexTable].m_nodes[indexSubtable][index].token == token)
-				{
-					if (token == ";")
-					{
-						int abc = 3;
-					}
-					std::cout << "READ_token: " << token << " in: " << m_tables[indexTable].m_head.token << std::endl;
-					index++;
-				}
-				else
-				{
-					if (!m_stack.empty())
-					{
-						pop();
-						//m_tokensStack.top();
-						continue;
-						
-					}
-					else
-					{
-						//std::cout << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
-#include <sstream>
-						std::stringstream ss;
-						ss << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
+				std::stringstream ss;
+				ss << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
 
-						throw(std::exception(ss.str().c_str()));
-					}
-				}
+				throw(std::exception(ss.str().c_str()));
 			}
 
-			++tokenID;
 		}
 		throw(std::exception("Success"));
 	};
 
 	size_t indexTable;
 	size_t indexSubtable;
-	size_t i1;
 	size_t index;
 
 	std::vector<Table> m_tables;
 	std::vector<std::string> m_tokens;
 	std::vector<std::vector<std::string>> m_direction;
-	std::stack<size_t> m_tokensStack;
-	std::stack<StackItem> m_stack;
+	std::stack<size_t> m_stack;
 	
 
 };

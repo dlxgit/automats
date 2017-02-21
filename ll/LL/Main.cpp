@@ -74,13 +74,14 @@ int main()
 	
 	try
 	{
-		std::vector<std::string> directionStack = tableRunner.GetDirectionStack("<arithmetic_expression>", "e");
-		std::cout << "STACK:" << std::endl;
-		for (auto el : directionStack)
-		{
-			std::cout << el << std::endl;
-		}
-		std::cout << "STACK_END" << std::endl;
+		//DirectionStack directionStack = tableRunner.GetDirectionStack("<arithmetic_expression>", "E");
+// 		std::cout << "STACK:" << std::endl;
+// 		for (auto el : directionStack)
+// 		{
+// 			std::cout << el.item << std::endl;
+// 		}
+// 		std::cout << "STACK_END" << std::endl << "\n\n\n\n";
+		
 		tableRunner.Run();
 	}
 	catch (std::exception e)

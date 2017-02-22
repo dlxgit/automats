@@ -310,12 +310,25 @@ struct TableRunner
 						{
 
 						}
+// 						else if (m_tables[i].m_nodes[k].size() == 1)
+// 						{
+// 							m_stack.pop();
+// 							updateValuesFromStack(true);
+// 							return;
+// 						}
+						
 						else if (m_tables[i].m_nodes[k].size() == 1)
 						{
 							m_stack.pop();
 							updateValuesFromStack(true);
 							return;
 						}
+// 						else if (m_tables[i].m_nodes[k].size() == index + 1)
+// 						{
+// 							int abc = 3;
+// 							m_stack.pop();
+// 							
+// 						}
 						index = j;
 						indexSubtable = k;
 						indexTable = i;
@@ -492,7 +505,10 @@ struct TableRunner
 			}
 
 			std::string token = m_tokens[tokenID];
-
+			if (token == ";")
+			{
+				int abc = 3;
+			}
 			//если мы вначале и ищем направляющее множество
 			if (index == 0)
 			{
@@ -538,9 +554,17 @@ struct TableRunner
 			{
 				//std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
 
+// 				if (m_tables[indexTable].m_nodes[indexSubtable].size() != index + 1)
+// 				{
+// 					push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+// 				}
 				if (m_tables[indexTable].m_nodes[indexSubtable].size() != index + 1)
 				{
 					push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+				}
+				else
+				{
+					//push(m_tables[indexTable].m_nodes[indexSubtable][index].i2);
 				}
 				
 				indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);

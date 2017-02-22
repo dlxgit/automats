@@ -38,11 +38,19 @@ struct TableRunner
 
 	DirectionStack GetDirectionStack(const std::string & rule, const std::string & token)
 	{
+		if (token == "INT")
+		{
+			int abc = 3;
+		}
 		DirectionStack result;
 		size_t tableId = getTableIndexByToken(rule);
 		//m_tokens[tableId]
 		for (size_t i = 0; i < m_direction[tableId].size(); ++i)
 		{
+			if (rule == "<TERM>")
+			{
+				int a = 3;
+			}
 			//мы нашли направляющее множество
 			if (m_direction[tableId][i] == token || m_direction[tableId][i] == "E")
 			{
@@ -383,8 +391,9 @@ struct TableRunner
 				{
 					if (i == 0)
 					{
+						push(m_tables[indexTable].m_nodes[indexSubtable][1].i2);
 						indexTable = getTableIndexByToken(stack[i].item);
-						indexSubtable = stack[i].subIndex;
+						indexSubtable = stack[i + 1].subIndex;
 						continue;
 					}
 					std::cout << "Push from pushDirection(): " << stack[i].item << std::endl;
@@ -392,7 +401,15 @@ struct TableRunner
 				}
 				
 				indexTable = getTableIndexByToken(stack[i].item);
-				indexSubtable = stack[i].subIndex;
+				if (i < stack.size() - 1)
+				{
+					indexSubtable = stack[i + 1].subIndex;
+				}
+				else
+				{
+					indexSubtable = 0;
+					return true;
+				}
 				continue;
 			}
 		}
@@ -479,8 +496,12 @@ struct TableRunner
 			else if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
 			{
 				std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
-				push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
 
+				if (m_tables[indexTable].m_nodes[indexSubtable].size() != index + 1)
+				{
+					push(m_tables[indexTable].m_nodes[indexSubtable][index + 1].i2);
+				}
+				
 				indexTable = getTableIndexByI1(m_tables[indexTable].m_nodes[indexSubtable][index].i1);
 				index = 0;
 				indexSubtable = 0;

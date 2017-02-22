@@ -86,7 +86,7 @@ E 0 33
 
 <VARIABLE> 77700 7701
 = 7703 7702
-<assign_variable> 12150 7703
+<ASSIGN_VARIABLE> 12150 7703
 
 <INPUT> 110 101
 
@@ -102,7 +102,7 @@ E 0 33
 
 
 }}
-<assign_variable> 12150 12151
+<ASSIGN_VARIABLE> 12150 12151
 
 <EXPR> 1200 12151
 
@@ -115,18 +115,18 @@ E 0 33
 <VALUELIST> 200 201
 
 <EXPR> 1200 201
-<valueList_append> 12050 202
+<VALUELIST_APPEND> 12050 202
 
 E 0 204
 }}
 
 
 }}
-<valueList_append> 12050 12051
+<VALUELIST_APPEND> 12050 12051
 
 , 12052 12051
 <EXPR> 1200 12052
-<valueList_append> 12050 12053
+<VALUELIST_APPEND> 12050 12053
 
 E 0 12054
 }}
@@ -150,7 +150,7 @@ IF 132 131
 ELSE 602 601
 <SCOPE> 10 602
 
-e 0 603
+E 0 603
 }}
 
 
@@ -184,7 +184,7 @@ ID 127 126
 }}
 <WHILE> 140 141
 
-while 142 141
+WHILE 142 141
 <PAREN_EXPR> 500 142
 <SCOPE> 10 143
 }}
@@ -204,39 +204,39 @@ while 142 141
 }}
 <EXPR> 1200 1201
 
-<arithmetic_expression> 1210 1201
+<ARITHMETIC_EXPRESSION> 1210 1201
 
-<bool_expression> 1310 1202
+<BOOL_EXPRESSION> 1310 1202
 }}
 
 
 
 }}
-<arithmetic_expression> 1210 1211
+<ARITHMETIC_EXPRESSION> 1210 1211
 
-<arithmetic_expression_basic> 1220 1211
+<ARITHMETIC_EXPRESSION_BASIC> 1220 1211
 
-<arithmetic_expression_increase> 1240 1212
+<ARITHMETIC_EXPRESSION_INCREASE> 1240 1212
 }}
 
 
 
 }}
-<arithmetic_expression_basic> 1220 1221
+<ARITHMETIC_EXPRESSION_BASIC> 1220 1221
 
-<term> 1410 1221
+<TERM> 1410 1221
 
 + 1223 1222
-<term> 1410 1223
+<TERM> 1410 1223
 
 - 1225 1224
-<term> 1410 1225
+<TERM> 1410 1225
 }}
 
 
 
 }}
-<arithmetic_symbol> 1250 1251
+<ARITHMETIC_SYMBOL> 1250 1251
 
 + 1252 1251
 
@@ -252,7 +252,7 @@ while 142 141
 
 
 }}
-<arithmetic_beginning> 1230 1231
+<ARITHMETIC_BEGINNING> 1230 1231
 
 + 1232 1231
 
@@ -264,12 +264,12 @@ E 0 1233
 
 
 }}
-<arithmetic_expression_increase> 1240 1241
+<ARITHMETIC_EXPRESSION_INCREASE> 1240 1241
 
-<arithmetic_expression_basic> 1220 1241
-<arithmetic_symbol> 1250 1242
-<term> 1410 1243
-<arithmetic_expression_increase> 1240 1244
+<ARITHMETIC_EXPRESSION_BASIC> 1220 1241
+<ARITHMETIC_SYMBOL> 1250 1242
+<TERM> 1410 1243
+<ARITHMETIC_EXPRESSION_INCREASE> 1240 1244
 
 E 0 1243
 }}
@@ -277,15 +277,15 @@ E 0 1243
 
 
 }}
-<bool_expression> 1310 1311
-<bool_expression_basic> 1320 1311
-<bool_expression_increase> 1370 1312
+<BOOL_EXPRESSION> 1310 1311
+<BOOL_EXPRESSION_BASIC> 1320 1311
+<BOOL_EXPRESSION_INCREASE> 1370 1312
 }}
 
 
 
 }}
-<bool_expression_beginning> 1330 1331
+<BOOL_EXPRESSION_BEGINNING> 1330 1331
 
 ! 0 1321
 
@@ -295,21 +295,21 @@ E 0 1322
 
 
 }}
-<bool_expression_basic> 1320 1321
+<BOOL_EXPRESSION_BASIC> 1320 1321
 
-<bool_expression_beginning> 1330 1321
-<term> 1700 1322
+<BOOL_EXPRESSION_BEGINNING> 1330 1321
+<TERM> 1700 1322
 }}
 
 
 
 }}
-<bool_expression_increase> 1370 1371
+<BOOL_EXPRESSION_INCREASE> 1370 1371
 
-<bool_expression_basic> 1320 1331
-<bool_symbol> 1340 1332
-<bool_expression_basic> 1320 1333
-<bool_expression_increase> 1370 1334
+<BOOL_EXPRESSION_BASIC> 1320 1331
+<BOOL_SYMBOL> 1340 1332
+<BOOL_EXPRESSION_BASIC> 1320 1333
+<BOOL_EXPRESSION_INCREASE> 1370 1334
 
 E 0 1335
 }}
@@ -317,7 +317,7 @@ E 0 1335
 
 
 }}
-<bool_symbol> 1340 1341
+<BOOL_SYMBOL> 1340 1341
 
 > 0 1341
 
@@ -339,26 +339,25 @@ E 0 1335
 
 
 }}
-<term> 1410 1411
+<TERM> 1410 1411
 
-<variable> 77700 1411
+<VARIABLE> 77700 1411
 
-<value> 5600 1414
+<VALUE> 5600 1414
 }}
 
 
 
 }}
-<variable> 77700 1421
+<VARIABLE> 77700 1421
 
 ID 1422 1421
-<var_array_define_optional> 60 1422
+<VAR_ARRAY_DEFINE_OPTIONAL> 60 1422
 }}
 
 
-
 }}
-<array_element> 1430 1431
+<ARRAY_ELEMENT> 1430 1431
 
 ID 1432 1431
 [ 1433 1432
@@ -370,7 +369,7 @@ INT 1434 1433
 
 
 }}
-<value> 5600 5601
+<VALUE> 5600 5601
 
 INT 5602 5601
 

@@ -1,7 +1,14 @@
 PROGRAM
 ID
 {
+VAR
+{
+TYPENAME
+[
 INT
+]
+ID
 ;
+}
 }
 .

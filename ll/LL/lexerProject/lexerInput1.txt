@@ -1,4 +1,7 @@
 program calculate
 {
-	3;
+	var
+{
+int [3] a;
+}
 }.

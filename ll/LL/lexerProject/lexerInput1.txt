@@ -1,4 +1,4 @@
-program kek3
+program kek5
 {
-	a < b;
+	1 || 2 < 3;
 }.

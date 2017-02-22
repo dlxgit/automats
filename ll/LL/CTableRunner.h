@@ -38,7 +38,7 @@ struct TableRunner
 
 	DirectionStack GetDirectionStack(const std::string & rule, const std::string & token)
 	{
-		if (token == "INT")
+		if (token == "+")
 		{
 			int abc = 3;
 		}
@@ -335,6 +335,7 @@ struct TableRunner
 						
 						if (isDelNeed)
 						{
+							index++;
 							return;
 						}
 						pop();
@@ -505,7 +506,7 @@ struct TableRunner
 			}
 
 			std::string token = m_tokens[tokenID];
-			if (token == ";")
+			if (token == "+")
 			{
 				int abc = 3;
 			}

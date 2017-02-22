@@ -63,11 +63,34 @@
 <EXPR> -> <bool_expression>
 
 
+<EXPR> -> term 
+<EXPR> -> <bool_expression>
+
+
+<EXPR> -> <VARIABLE> = <EXPR> <VALUELIST>
+
+<arithmetic_expression> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
+<bool_expression> -> <bool_expression_basic> <bool_expression_increase>
+
+<bool_expression_basic> -> <bool_expression_beginning> <term>
+<arithmetic_expression_basic> -> <arithmetic_beginning> <term>
+
+
+expr = beginning term expr_increase
+
+<expr_increase> <SYMBOL> <BOOL_EXPRESSION>
+
+
+<VARIABLE> 77700 7701
+= 7703 7702
+<ASSIGN_VARIABLE> 12150 7703
+
 //term
 <term> -> <variable>
 <term> -> <paren_expression>
 <term> -> <expression>
 <term> -> value
+
 
 <variable> -> id
 <variable> -> id [ number ]
@@ -94,6 +117,9 @@
 
 
 
+
+5
+
 //bool expression
 <bool_expression> -> <bool_expression_basic> <bool_expression_increase>
 
@@ -115,9 +141,11 @@
 <bool_symbol> -> ||
 
 
-bool_expr = term bool_expr_increase
+bool_expr = bool_expression_basic bool_expr_increase
 
-bool_expr_increase = znak bool_expr
+bool_expr = bool_expression_basic znak bool_expr
+
+bool_expr_increase = znak term
 bool_expr_increase = E
 
 

@@ -1,9 +1,13 @@
 PROGRAM
 ID
 {
-ID
+(
+INT
+||
+INT
+)
 <
-ID
+INT
 ;
 }
 .

@@ -292,7 +292,11 @@ struct TableRunner
 // 		}
 // 	}
 
-	void updateValuesFromStack()
+
+	//size_t getTable
+
+
+	void updateValuesFromStack(bool isDelNeed = false)
 	{
 		for (size_t i = 0; i < m_tables.size(); ++i)
 		{
@@ -302,9 +306,25 @@ struct TableRunner
 				{
 					if (m_tables[i].m_nodes[k][j].i2 == m_stack.top())
 					{
+						if (isDelNeed)
+						{
+
+						}
+						else if (m_tables[i].m_nodes[k].size() == 1)
+						{
+							m_stack.pop();
+							updateValuesFromStack(true);
+							return;
+						}
 						index = j;
 						indexSubtable = k;
 						indexTable = i;
+						
+						if (isDelNeed)
+						{
+							return;
+						}
+						pop();
 						return;
 					}
 				}
@@ -378,6 +398,15 @@ struct TableRunner
 
 	bool pushDirection(DirectionStack stack)
 	{
+		if (indexTable == 28 && !stack.empty() && stack.back().item == "<VALUE>")
+		{
+			int abc = 3;
+		}
+		if (stack.size() == 1)
+		{
+			indexSubtable = stack[0].subIndex;
+		}
+
 		m_tables[indexTable].m_nodes[indexSubtable][index];
 
 		size_t startStackSize = m_stack.size();
@@ -391,13 +420,21 @@ struct TableRunner
 				{
 					if (i == 0)
 					{
+						//пуш дл€ того чтобы если мы в стейтментлист и читаем стейтмент - его добавить (он - не последний)
 						push(m_tables[indexTable].m_nodes[indexSubtable][1].i2);
 						indexTable = getTableIndexByToken(stack[i].item);
-						indexSubtable = stack[i + 1].subIndex;
+						if (stack.size() != 1)
+						{
+							indexSubtable = stack[i + 1].subIndex;
+						}
 						continue;
 					}
 					std::cout << "Push from pushDirection(): " << stack[i].item << std::endl;
 					push(m_tables[indexTable].m_nodes[indexSubtable][1].i2);
+				}
+				else if (i == stack.size() - 1)
+				{
+					push(m_tables[indexTable].m_nodes[indexSubtable][0].i2);
 				}
 				
 				indexTable = getTableIndexByToken(stack[i].item);
@@ -449,7 +486,6 @@ struct TableRunner
 				if (!m_stack.empty())
 				{
 					updateValuesFromStack();
-					pop();
 				}
 				//?
 				continue;
@@ -460,9 +496,14 @@ struct TableRunner
 			//если мы вначале и ищем направл€ющее множество
 			if (index == 0)
 			{
+				if (token == ";")
+				{
+					int abc = 3;
+				}
 				auto st = GetDirectionStack(m_tables[indexTable].m_head.token, token);
 				if (st.empty())
 				{
+					//если не е - ошибка
 					//ошибка
 					std::stringstream ss;
 					ss << "Error: exprected <" << m_tables[indexTable].m_nodes[indexSubtable][index].token << ">" << " but got <" << token << "> \n";
@@ -517,9 +558,14 @@ struct TableRunner
 			}
 			else if (m_tables[indexTable].m_nodes[indexSubtable][index].token == token)
 			{
+				
 				std::cout << "READ_token: " << token << " in: " << m_tables[indexTable].m_head.token << std::endl;
 				index++;
 				++tokenID;
+				if (tokenID == 4)
+				{
+					int abc = 3;
+				}
 			}
 			else
 			{

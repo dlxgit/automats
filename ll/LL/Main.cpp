@@ -45,9 +45,14 @@ void BeginProgram(const std::string & fileName)
 
 
 
-int main()
+int main(int argc, char * argv [])
 {
-	BeginProgram("lexerInput1.txt");
+	std::string fName = "lexerInput1.txt";
+	if (argc == 2)
+	{
+		fName = argv[1];
+	}
+	BeginProgram(fName);
 	std::vector<std::string> rules =
 	{
 		"<PROG> -> PROG id <VAR> begin <IDLIST> END",
@@ -87,6 +92,11 @@ int main()
 	catch (std::exception e)
 	{
 		std::cout << e.what() << std::endl;
+		if (e.what() == "Success")
+		{
+			//return 0;
+		}
+		//else return 1;
 	}
 	
 

@@ -15,6 +15,10 @@ struct TableHelper
 		std::vector<std::vector<std::string>> directions;
 		for (size_t i = 0; i < tables.size(); ++i)
 		{
+			if (tables[i].m_head.token == "<ARITHMETIC_SYMBOL>")
+			{
+				int abc = 3;
+			}
 			directions.push_back(std::vector<std::string>());
 			for (size_t j = 0; j < tables[i].m_nodes.size(); ++j)
 			{

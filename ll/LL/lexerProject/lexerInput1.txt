@@ -1,7 +1,4 @@
 program calculate
 {
-	var
-{
-int [3] a;
-}
+	3 + 1;
 }.

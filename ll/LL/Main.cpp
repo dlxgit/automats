@@ -77,7 +77,7 @@ int main(int argc, char * argv [])
 
 	TableRunner tableRunner(FileReader("D:/Automats/Tables/ll/LL/lexerProject/tables.txt").GetTables(), FileReader::ReadTokens());
 	
-	try
+	//try
 	{
 		//DirectionStack directionStack = tableRunner.GetDirectionStack("<arithmetic_expression>", "E");
 // 		std::cout << "STACK:" << std::endl;
@@ -89,14 +89,14 @@ int main(int argc, char * argv [])
 		
 		tableRunner.Run();
 	}
-	catch (std::exception e)
+	//catch (std::exception e)
 	{
-		std::cout << e.what() << std::endl;
-		if (e.what() == "Success")
+		//std::cout << e.what() << std::endl;
+		//if (e.what() == "Success")
 		{
 			//return 0;
 		}
-		//else return 1;
+		//return 1;
 	}
 	
 

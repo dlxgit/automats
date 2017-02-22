@@ -1,9 +1,9 @@
 PROGRAM
 ID
 {
-INT
-+
-INT
+ID
+<
+ID
 ;
 }
 .

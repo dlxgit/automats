@@ -237,7 +237,7 @@ struct TableRunner
 				return i;
 			}
 		}
-		std::cout << "LOGIC_ERR: i1 = " << i1 << std::endl;
+		//std::cout << "LOGIC_ERR: i1 = " << i1 << std::endl;
 		throw (std::logic_error("not found index"));
 	}
 
@@ -250,7 +250,7 @@ struct TableRunner
 				return i;
 			}
 		}
-		//std::cout << "LOGIC_ERR: i1 = " << i1 << std::endl;
+		////std::cout << "LOGIC_ERR: i1 = " << i1 << std::endl;
 		throw (std::logic_error("not found table"));
 	}
 
@@ -370,14 +370,14 @@ struct TableRunner
 		{
 			int abc = 3;
 		}
-		std::cout << "Pop:\t" << m_stack.top() << " " <<  std::endl;
+		//std::cout << "Pop:\t" << m_stack.top() << " " <<  std::endl;
 		m_stack.pop();	
 	}
 
 	void push(size_t val)
 	{
-		//std::cout << "Push:\t" << m_tables[getTableIndexByI1(m_stack.top().val)].m_head.token << std::endl;
-		//std::cout << "Push: " << m_tables[getTableIndexByI1(m_stack.top().val)].m_head.token << " " << isLast << std::endl;
+		////std::cout << "Push:\t" << m_tables[getTableIndexByI1(m_stack.top().val)].m_head.token << std::endl;
+		////std::cout << "Push: " << m_tables[getTableIndexByI1(m_stack.top().val)].m_head.token << " " << isLast << std::endl;
 		m_stack.push(val);
 	}
 
@@ -429,7 +429,7 @@ struct TableRunner
 						}
 						continue;
 					}
-					std::cout << "Push from pushDirection(): " << stack[i].item << std::endl;
+					//std::cout << "Push from pushDirection(): " << stack[i].item << std::endl;
 					push(m_tables[indexTable].m_nodes[indexSubtable][1].i2);
 				}
 				else if (i == stack.size() - 1)
@@ -496,7 +496,7 @@ struct TableRunner
 			//если мы вначале и ищем направляющее множество
 			if (index == 0)
 			{
-				if (token == ";")
+				if (m_tables[indexTable].m_head.token == "<BOOL_EXPRESSION_INCREASE>")
 				{
 					int abc = 3;
 				}
@@ -536,7 +536,7 @@ struct TableRunner
 			//если мы не в начале и это нетерминал
 			else if (!isTerminal(m_tables[indexTable].m_nodes[indexSubtable][index].token))
 			{
-				std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
+				//std::cout << "Push: " << m_tables[indexTable].m_nodes[indexSubtable][index].token << std::endl;
 
 				if (m_tables[indexTable].m_nodes[indexSubtable].size() != index + 1)
 				{
@@ -553,13 +553,13 @@ struct TableRunner
 
 			if (m_tables[indexTable].m_nodes[indexSubtable][index].token == "E")
 			{
-				std::cout << "READ_EPSILON in: " << m_tables[indexTable].m_head.token << std::endl;
+				//std::cout << "READ_EPSILON in: " << m_tables[indexTable].m_head.token << std::endl;
 				index++;
 			}
 			else if (m_tables[indexTable].m_nodes[indexSubtable][index].token == token)
 			{
 				
-				std::cout << "READ_token: " << token << " in: " << m_tables[indexTable].m_head.token << std::endl;
+				//std::cout << "READ_token: " << token << " in: " << m_tables[indexTable].m_head.token << std::endl;
 				index++;
 				++tokenID;
 				if (tokenID == 4)

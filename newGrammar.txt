@@ -115,6 +115,14 @@
 <bool_symbol> -> ||
 
 
+bool_expr = term bool_expr_increase
+
+bool_expr_increase = znak bool_expr
+bool_expr_increase = E
+
+
+
+
 program test
 {
 	var

@@ -84,9 +84,6 @@
 <arithmetic_symbol> -> %
 
 
-<arithmetic_beginning> -> +
-<arithmetic_beginning> -> -
-<arithmetic_beginning> -> E
 
 <arithmetic_expression_basic> -> + <term>
 <arithmetic_expression_basic> -> - <term>
@@ -94,17 +91,21 @@
 
 <arithmetic_expression> -> <arithmetic_expression_basic> <arithmetic_expression_increase>
 
-<arithmetic_expression_increase> -> <arithmetic_expression_basic> <arithmetic_symbol> <term> <arithmetic_expression_increase>
+<arithmetic_expression_increase> -> <arithmetic_expression_basic> <arithmetic_expression_increase_second>
 <arithmetic_expression_increase> -> E;
+<arithmetic_expression_increase_second> - > <arithmetic_symbol> <term> <arithmetic_expression_increase>
+<arithmetic_expression_increase_second> - > E
 
+3 + 1
+
+arithmetic_expression_basic  
 
 
 //bool expression
 <bool_expression> -> <bool_expression_basic> <bool_expression_increase>
 
-<bool_expression_basic> -> <bool_expression_beginning> <term>
-<bool_expression_beginning> -> !
-<bool_expression_beginning> -> E
+<bool_expression_basic> -> ! <term>
+<bool_expression_basic> -> <term>
 
 <bool_expression_increase> -> <bool_expression_basic> <bool_symbol> <bool_expression_basic> <bool_expression_increase>
 <bool_expression_increase> -> E;

@@ -1,4 +1,4 @@
-program calculate
+program kek3
 {
-	3 + 1;
+	a < b;
 }.
